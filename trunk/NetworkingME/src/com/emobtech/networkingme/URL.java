@@ -6,15 +6,10 @@ public final class URL {
 	
 	private String url;
 	
-	static void validate(String url) {
-	}
-	
 	public URL(String url) {
 		if (StringUtil.isEmpty(url)) {
 			throw new IllegalArgumentException("URL null or empty!");
 		}
-		//
-		validate(url);
 		//
 		this.url = url;
 	}
@@ -24,9 +19,9 @@ public final class URL {
 	}
 
 	public String getDomain() {
-		final int endSchemeIndex = url.indexOf("://") +3;
-		final int portIndex = url.indexOf(":", endSchemeIndex);
-		final int pathIndex = url.indexOf("/", endSchemeIndex);
+		int endSchemeIndex = url.indexOf("://") +3;
+		int portIndex = url.indexOf(":", endSchemeIndex);
+		int pathIndex = url.indexOf("/", endSchemeIndex);
 		//
 		if (portIndex != -1) {
 			return url.substring(endSchemeIndex, portIndex);
@@ -40,11 +35,11 @@ public final class URL {
 	public int getPort() {
 		String port = null;
 		//
-		final int endSchemeIndex = url.indexOf("://") +3;
-		final int portIndex = url.indexOf(":", endSchemeIndex);
+		int endSchemeIndex = url.indexOf("://") +3;
+		int portIndex = url.indexOf(":", endSchemeIndex);
 		//
 		if (portIndex != -1) {
-			final int pathIndex = url.indexOf("/", endSchemeIndex);
+			int pathIndex = url.indexOf("/", endSchemeIndex);
 			//
 			if (pathIndex != -1) {
 				port = url.substring(portIndex +1, pathIndex);
@@ -54,29 +49,61 @@ public final class URL {
 		}
 		//
 		if (port == null) {
-			final String scheme = getScheme().toLowerCase();
+			String scheme = getScheme().toLowerCase();
 			//
 			if ("http".equals(scheme)) {
 				port = "80";
 			} else if ("https".equals(scheme)) {
-				
+				port = "443";
+			} else {
+				port = "-1";
 			}
-			
 		}
 		//
 		return Integer.parseInt(port);
 	}
 
 	public String getPath() {
-		return null;
+		int endSchemeIndex = url.indexOf("://") +3;
+		int pathIndex = url.indexOf("/", endSchemeIndex);
+		//
+		if (pathIndex != -1) {
+			int queryStringIndex = url.indexOf("?", pathIndex);
+			//
+			if (queryStringIndex != -1) {
+				return url.substring(pathIndex, queryStringIndex);
+			} else {
+				return url.substring(pathIndex);
+			}
+		} else {
+			return null;
+		}
 	}
 
 	public String getQueryString() {
-		return null;
+		int queryStringIndex = url.indexOf("?");
+		//
+		if (queryStringIndex != -1) {
+			int fragmentIndex = url.indexOf("#", queryStringIndex);
+			//
+			if (fragmentIndex != -1) {
+				return url.substring(queryStringIndex +1, fragmentIndex);
+			} else {
+				return url.substring(queryStringIndex +1);
+			}
+		} else {
+			return null;
+		}
 	}
 
 	public String getFragment() {
-		return null;
+		final int fragmentIndex = url.indexOf("#");
+		//
+		if (fragmentIndex != -1) {
+			return url.substring(fragmentIndex +1);
+		} else {
+			return null;
+		}
 	}
 	
 	/**
@@ -107,10 +134,64 @@ public final class URL {
 		return url;
 	}
 	
+	public String toEncodedString() {
+		StringBuffer encodedUrl = new StringBuffer();
+		//
+		encodedUrl.append(getScheme());
+		encodedUrl.append("://");
+		encodedUrl.append(getDomain());
+		//
+		int port = getPort();
+		//
+		if (port != -1) {
+			encodedUrl.append(":");
+			encodedUrl.append(port);
+		}
+		//
+		encodedUrl.append(getPath());
+		//
+		String queryString = getQueryString();
+		//
+		if (queryString != null) {
+			encodedUrl.append("?");
+			encodedUrl.append(encodeQueryString(queryString));
+		}
+		//
+		String fragment = getFragment();
+		//
+		if (fragment != null) {
+			encodedUrl.append("#");
+			encodedUrl.append(fragment);
+		}
+		//
+		return encodedUrl.toString();
+	}
+	
+	String encodeQueryString(String queryString) {
+		StringBuffer encodedQueryString = new StringBuffer();
+		String[] params = StringUtil.split(queryString, '&');
+		//
+		for (int i = 0; i < params.length; i++) {
+			String[] paramValue = StringUtil.split(params[i], '=');
+			//
+			encodedQueryString.append(paramValue[0]);
+			encodedQueryString.append('=');
+			encodedQueryString.append(
+				URLEncoder.encode(paramValue[1], "UTF-8"));
+		}
+		//
+		return encodedQueryString.toString();
+	}
+	
 	public static void main(String[] args) {
-		URL url = new URL("http://www.emobtech.com:8080");
+		URL url = new URL("http://www.emobtech.com:7777/page/path.html?param=val ue&param2=val ue2#fragment");
 		//
 		System.out.println("scheme: " + url.getScheme());
 		System.out.println("domain: " + url.getDomain());
+		System.out.println("port: " + url.getPort());
+		System.out.println("path: " + url.getPath());
+		System.out.println("queryString: " + url.getQueryString());
+		System.out.println("fragment: " + url.getFragment());
+		System.out.println("encodedString: " + url.toEncodedString());
 	}
 }
