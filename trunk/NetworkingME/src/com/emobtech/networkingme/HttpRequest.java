@@ -15,7 +15,6 @@ import java.util.Hashtable;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
-
 /**
  * <p>
  * This class implements a Http request.
@@ -25,7 +24,7 @@ import javax.microedition.io.HttpConnection;
  * @version 1.1
  * @since 1.3
  */
-public final class HttpRequest extends Request {
+public final class HttpRequest {
 	/**
 	 * <p>
 	 * URL.

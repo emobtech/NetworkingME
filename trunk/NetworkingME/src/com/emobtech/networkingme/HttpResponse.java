@@ -23,7 +23,7 @@ import javax.microedition.io.HttpConnection;
  * @version 1.1
  * @since 1.3
  */
-public final class HttpResponse extends Response {
+public final class HttpResponse {
 	/**
 	 * <p>
 	 * Response code.

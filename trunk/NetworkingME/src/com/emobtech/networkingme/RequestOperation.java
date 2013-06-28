@@ -1,5 +1,7 @@
 package com.emobtech.networkingme;
 
+import java.io.IOException;
+
 public class RequestOperation {
 	
 	private Request request;
@@ -19,7 +21,13 @@ public class RequestOperation {
 	}
 	
 	public void start() {
-		Response response = request.send();
+		Response response = null;
+		try {
+			response = request.send();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//
 		if (listener != null) {
 			if (response.wasSuccessfull()) {
