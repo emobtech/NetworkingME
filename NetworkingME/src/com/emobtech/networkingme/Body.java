@@ -6,5 +6,5 @@ public abstract class Body {
 	
 	public abstract long getLength();
 	
-	public abstract byte[] getContent();
+	public abstract byte[] getBytes();
 }
