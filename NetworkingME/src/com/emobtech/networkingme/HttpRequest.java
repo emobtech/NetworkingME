@@ -17,21 +17,32 @@ public final class HttpRequest extends Request {
 	
 	public static interface Code {
 		int OK = 200;
-		int FORBIDDEN = 403;
-		int UNAVAILABLE = 503;
-		int NOT_MODIFIED = 304;
+		//
+		int MULTIPLE_CHOICES = 300;
+		int MOVED_PERMANENTLY = 301;
+		int FOUND = 302;
+		int SEE_OTHER = 303;
+		int TEMPORARY_REDIRECT = 307;
+		int PERMANENT_REDIRECT = 308;
+		//
 		int BAD_REQUEST = 400;
 		int UNAUTHORIZED = 401;
+		int FORBIDDEN = 403;
 		int NOT_FOUND = 404;
 		int NOT_ACCEPTABLE = 406;
+		int REQUEST_TIMEOUT = 408;
+		int TOO_MANY_REQUESTS = 429;
+		//
 		int INTERNAL_ERROR = 500;
+		int NOT_IMPLEMENTED = 501;
 		int BAD_GATEWAY = 502;
-		int TOO_MANY_REQUESTS = 429;		
+		int SERVICE_UNAVAILABLE = 503;
 	}
 	
 	public static interface Header {
 		String CONTENT_LENGTH = "Content-Length";
 		String CONTENT_TYPE = "Content-Type";
+		String LOCATION = "Location";
 	}
 
 	private String method;
