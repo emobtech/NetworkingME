@@ -1,8 +1,6 @@
 package com.emobtech.networkingme;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import javax.microedition.io.HttpConnection;
@@ -15,7 +13,7 @@ public final class HttpResponse extends Response {
 	
 	HttpResponse(HttpConnection conn) throws IOException {
 		code = conn.getResponseCode();
-		buffer = readBytes(conn.openInputStream());
+		buffer = Util.readBytes(conn.openInputStream());
 		type = conn.getRequestProperty(HttpRequest.Header.CONTENT_TYPE);
 	}
 
@@ -32,14 +30,6 @@ public final class HttpResponse extends Response {
 		return buffer;
 	}
 
-	public long getLength() {
-		return buffer.length;
-	}
-
-	public String getType() {
-		return type;
-	}
-	
 	public String getString() {
 		try {
 			return new String(buffer, "UTF-8");
@@ -47,15 +37,12 @@ public final class HttpResponse extends Response {
 			return null;
 		}
 	}
-	
-	private byte[] readBytes(InputStream in) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
-		byte[] buffer = new byte[1024];
-		//
-		for (int n; (n = in.read(buffer)) > 0;) {
-			out.write(buffer, 0, n);
-		}
-		//
-		return out.toByteArray();
+
+	public long getLength() {
+		return buffer.length;
+	}
+
+	public String getType() {
+		return type;
 	}
 }

@@ -7,7 +7,7 @@ public final class URL {
 	private String url;
 	
 	public URL(String url) {
-		if (StringUtil.isEmpty(url)) {
+		if (Util.isEmptyString(url)) {
 			throw new IllegalArgumentException("URL null or empty!");
 		}
 		//
@@ -169,15 +169,14 @@ public final class URL {
 	
 	String encodeQueryString(String queryString) {
 		StringBuffer encodedQueryString = new StringBuffer();
-		String[] params = StringUtil.split(queryString, '&');
+		String[] params = Util.splitString(queryString, '&');
 		//
 		for (int i = 0; i < params.length; i++) {
-			String[] paramValue = StringUtil.split(params[i], '=');
+			String[] paramValue = Util.splitString(params[i], '=');
 			//
 			encodedQueryString.append(paramValue[0]);
 			encodedQueryString.append('=');
-			encodedQueryString.append(
-				URLEncoder.encode(paramValue[1], "UTF-8"));
+			encodedQueryString.append(Util.encodeString(paramValue[1]));
 		}
 		//
 		return encodedQueryString.toString();

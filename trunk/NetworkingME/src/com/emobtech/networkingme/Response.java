@@ -8,6 +8,8 @@ public abstract class Response {
 	
 	public abstract byte[] getBytes();
 	
+	public abstract String getString();
+	
 	public abstract long getLength();
 	
 	public abstract String getType();

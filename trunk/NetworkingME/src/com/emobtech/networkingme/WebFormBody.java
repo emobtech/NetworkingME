@@ -9,12 +9,12 @@ public final class WebFormBody extends Body {
 	private byte[] content;
 	
 	public void add(String key, String value) {
-		if (StringUtil.isEmpty(key) || StringUtil.isEmpty(value)) {
+		if (Util.isEmptyString(key) || Util.isEmptyString(value)) {
 			throw new IllegalArgumentException("Key/Value null or empty!");
 		}
 		//
-		key = URLEncoder.encode(key, "UTF-8");
-		value = URLEncoder.encode(value, "UTF-8");
+		key = Util.encodeString(key);
+		value = Util.encodeString(value);
 		//
 		final String keyValue = key + '=' + value;
 		//
