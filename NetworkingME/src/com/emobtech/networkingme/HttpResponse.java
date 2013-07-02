@@ -2,6 +2,7 @@ package com.emobtech.networkingme;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Hashtable;
 
 import javax.microedition.io.HttpConnection;
 
@@ -9,12 +10,12 @@ public final class HttpResponse extends Response {
 	
 	private int code;
 	private byte[] buffer;
-	private String type;
+	private Hashtable headers;
 	
 	HttpResponse(HttpConnection conn) throws IOException {
 		code = conn.getResponseCode();
 		buffer = Util.readBytes(conn.openInputStream());
-		type = conn.getRequestProperty(HttpRequest.Header.CONTENT_TYPE);
+		headers = readHeaders(conn);
 	}
 
 	public boolean wasSuccessfull() {
@@ -43,6 +44,38 @@ public final class HttpResponse extends Response {
 	}
 
 	public String getType() {
-		return type;
+		return getHeader(HttpRequest.Header.CONTENT_TYPE);
+	}
+	
+	public String getHeader(String key) {
+		return (String)headers.get(key.toLowerCase());
+	}
+	
+	private Hashtable readHeaders(HttpConnection conn) throws IOException {
+		final int END = 100;
+		//
+		String key;
+		String value;
+		Hashtable headers = new Hashtable(10);
+		//
+		for (int i = 0; i < END; i++) {
+			key = conn.getHeaderFieldKey(i);
+			//
+			if (key != null) {
+				value = (String)headers.get(key);
+				//
+				if (value != null) {
+					value += ';' + conn.getHeaderField(i);
+				} else {
+					value = conn.getHeaderField(i);
+				}
+				//
+				headers.put(key.toLowerCase(), value);
+			} else {
+				break;
+			}
+		}
+		//
+		return headers;
 	}
 }

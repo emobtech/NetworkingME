@@ -1,10 +1,3 @@
-/*
- * URLEncoder.java
- * 05/12/2010
- * Google Analytics ME
- * Copyright(c) Ernandes Mourao Junior (ernandes@gmail.com)
- * All rights reserved
- */
 package com.emobtech.networkingme;
 
 import java.io.ByteArrayInputStream;
@@ -17,7 +10,7 @@ import java.io.UnsupportedEncodingException;
  * @author Ernandes Mourao Junior (ernandes@gmail.com)
  * @since 1.0
  */
-public final class URLEncoder {
+final class URLEncoder {
     /**
 	 * <p>
 	 * Encode a given string, according to the encoding type defined by the
