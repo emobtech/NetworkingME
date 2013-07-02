@@ -7,21 +7,21 @@ import java.io.UnsupportedEncodingException;
 
 import javax.microedition.io.HttpConnection;
 
-public final class HttpResponse_ extends Response {
+public final class HttpResponse extends Response {
 	
 	private int code;
 	private byte[] buffer;
 	private String type;
 	
-	HttpResponse_(HttpConnection conn) throws IOException {
+	HttpResponse(HttpConnection conn) throws IOException {
 		code = conn.getResponseCode();
 		buffer = readBytes(conn.openInputStream());
-		type = conn.getRequestProperty(HttpRequest_.Header.CONTENT_TYPE);
+		type = conn.getRequestProperty(HttpRequest.Header.CONTENT_TYPE);
 	}
 
 	public boolean wasSuccessfull() {
-		return code >= HttpRequest_.Code.OK
-			&& code < HttpRequest_.Code.BAD_REQUEST;
+		return code >= HttpRequest.Code.OK
+			&& code < HttpRequest.Code.BAD_REQUEST;
 	}
 
 	public int getCode() {
