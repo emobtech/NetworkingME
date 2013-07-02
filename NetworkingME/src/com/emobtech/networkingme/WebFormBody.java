@@ -3,7 +3,7 @@ package com.emobtech.networkingme;
 import java.io.UnsupportedEncodingException;
 import java.util.Vector;
 
-public final class HttpFormBody extends Body {
+public final class WebFormBody extends Body {
 	
 	private Vector parameters;
 	private byte[] content;
