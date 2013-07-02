@@ -22,7 +22,7 @@ public final class HttpResponse extends Response {
 		return code >= HttpRequest.Code.OK
 			&& code < HttpRequest.Code.BAD_REQUEST;
 	}
-
+	
 	public int getCode() {
 		return code;
 	}
@@ -51,6 +51,17 @@ public final class HttpResponse extends Response {
 		return (String)headers.get(key.toLowerCase());
 	}
 	
+	public boolean wasRedirected() {
+		return code >= HttpRequest.Code.MULTIPLE_CHOICES
+			&& code < HttpRequest.Code.BAD_REQUEST;
+	}
+
+	public URL getRedirectURL() {
+		String location = getHeader(HttpRequest.Header.LOCATION);
+		//
+		return location != null ? new URL(location) : null;
+	}
+
 	private Hashtable readHeaders(HttpConnection conn) throws IOException {
 		final int END = 100;
 		//
