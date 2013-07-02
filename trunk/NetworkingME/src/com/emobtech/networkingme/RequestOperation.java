@@ -14,19 +14,20 @@ public final class RequestOperation implements Runnable {
 	private Listener listener;
 	
 	public RequestOperation(Request request) {
+		if (request == null) {
+			throw new IllegalArgumentException("Request is null!");
+		}
+		//
 		this.request = request;
-	}
-
-	public RequestOperation(Request request, Listener listener) {
-		this.request = request;
-		this.listener = listener;
 	}
 	
-	public void startAsync() {
+	public void start(Listener listener) {
+		this.listener = listener;
+		//
 		ThreadDispatcher.getInstance().dispatch(this);
 	}
 	
-	public Response startSync() throws IOException, SecurityException {
+	public Response start() throws IOException, SecurityException {
 		return request.send();
 	}
 
