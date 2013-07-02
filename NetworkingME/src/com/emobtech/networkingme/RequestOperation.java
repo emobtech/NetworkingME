@@ -2,8 +2,14 @@ package com.emobtech.networkingme;
 
 import java.io.IOException;
 
-public class RequestOperation {
+
+public final class RequestOperation implements Runnable {
 	
+	public static interface Listener {
+		void onSuccess(Request request, Response response);
+		void onFailure(Request request, Exception exception);
+	}
+
 	private Request request;
 	private Listener listener;
 	
@@ -16,31 +22,25 @@ public class RequestOperation {
 		this.listener = listener;
 	}
 	
-	public void setListener(Listener listener) {
-		this.listener = listener;
+	public void startAsync() {
+		ThreadDispatcher.getInstance().dispatch(this);
 	}
 	
-	public void start() {
-		Response response = null;
+	public Response startSync() throws IOException, SecurityException {
+		return request.send();
+	}
+
+	public void run() {
 		try {
-			response = request.send();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//
-		if (listener != null) {
-			if (response.wasSuccessfull()) {
+			Response response = request.send();
+			//
+			if (listener != null) {
 				listener.onSuccess(request, response);
-			} else {
-				listener.onFailure(request, response);
+			}
+		} catch (Exception e) {
+			if (listener != null) {
+				listener.onFailure(request, e);
 			}
 		}
 	}
-
-	public static interface Listener {
-		void onSuccess(Request request, Response response);
-		void onFailure(Request request, Response response);
-	}
 }
-
