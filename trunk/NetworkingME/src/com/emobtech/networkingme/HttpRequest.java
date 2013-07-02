@@ -8,7 +8,7 @@ import java.util.Hashtable;
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
 
-public final class HttpRequest_ extends Request {
+public final class HttpRequest extends Request {
 	
 	public static interface Method {
 		String GET = "GET";
@@ -38,11 +38,11 @@ public final class HttpRequest_ extends Request {
 	private Hashtable headers;
 	private Body body;
 
-	public HttpRequest_(URL url) {
+	public HttpRequest(URL url) {
 		this(url, Method.GET);
 	}
 
-	public HttpRequest_(URL url, String method) {
+	public HttpRequest(URL url, String method) {
 		super(url);
 		//
 		checkMethod(method);
@@ -72,7 +72,7 @@ public final class HttpRequest_ extends Request {
 		attachBody(conn);
 		//
 		try {
-			HttpResponse_ response = new HttpResponse_(conn);
+			HttpResponse response = new HttpResponse(conn);
 			//
 			return response;
 		} finally {
