@@ -1,30 +1,61 @@
 package com.emobtech.networkingme;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
 import javax.microedition.io.HttpConnection;
 
-public class HttpResponse_ extends Response {
+public final class HttpResponse_ extends Response {
 	
-	HttpResponse_(HttpConnection conn) {
-		
+	private int code;
+	private byte[] buffer;
+	private String type;
+	
+	HttpResponse_(HttpConnection conn) throws IOException {
+		code = conn.getResponseCode();
+		buffer = readBytes(conn.openInputStream());
+		type = conn.getRequestProperty(HttpRequest_.Header.CONTENT_TYPE);
 	}
 
 	public boolean wasSuccessfull() {
-		return false;
+		return code >= HttpRequest_.Code.OK
+			&& code < HttpRequest_.Code.BAD_REQUEST;
 	}
 
 	public int getCode() {
-		return 0;
+		return code;
 	}
 
 	public byte[] getBytes() {
-		return null;
+		return buffer;
 	}
 
-	public long getSize() {
-		return 0;
+	public long getLength() {
+		return buffer.length;
 	}
 
-	public String getContentType() {
-		return null;
+	public String getType() {
+		return type;
+	}
+	
+	public String getString() {
+		try {
+			return new String(buffer, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			return null;
+		}
+	}
+	
+	private byte[] readBytes(InputStream in) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
+		byte[] buffer = new byte[1024];
+		//
+		for (int n; (n = in.read(buffer)) > 0;) {
+			out.write(buffer, 0, n);
+		}
+		//
+		return out.toByteArray();
 	}
 }

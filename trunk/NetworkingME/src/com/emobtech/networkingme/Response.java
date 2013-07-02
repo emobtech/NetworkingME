@@ -8,7 +8,7 @@ public abstract class Response {
 	
 	public abstract byte[] getBytes();
 	
-	public abstract long getSize();
+	public abstract long getLength();
 	
-	public abstract String getContentType();
+	public abstract String getType();
 }
