@@ -1,4 +1,4 @@
-/* RequestOperation.java
+/* RequestException.java
  * 
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
@@ -22,48 +22,60 @@
  */
 package com.emobtech.networkingme;
 
-import java.io.IOException;
-
-
-public final class RequestOperation implements Runnable {
+public final class RequestException extends Exception {
 	
-	public static interface Listener {
-		void onComplete(Request request, Response response);
-		void onFailure(Request request, RequestException exception);
-	}
-
-	private Request request;
-	private Listener listener;
+	private Exception cause;
+	private Response response;
 	
-	public RequestOperation(Request request) {
-		if (request == null) {
-			throw new IllegalArgumentException("Request is null!");
+	RequestException(Exception cause) {
+		if (cause == null) {
+			throw new IllegalArgumentException("Cause null!");
 		}
 		//
-		this.request = request;
-	}
-	
-	public void execute(Listener listener) {
-		this.listener = listener;
-		//
-		ThreadDispatcher.getInstance().dispatch(this);
-	}
-	
-	public Response execute() throws IOException, SecurityException {
-		return request.send();
+		this.cause = cause;
 	}
 
-	public void run() {
-		try {
-			Response response = request.send();
-			//
-			if (listener != null) {
-				listener.onComplete(request, response);
-			}
-		} catch (Exception e) {
-			if (listener != null) {
-				listener.onFailure(request, new RequestException(e));
-			}
+	RequestException(Response response) {
+		if (response == null) {
+			throw new IllegalArgumentException("Response null!");
 		}
+		//
+		this.response = response;
+	}
+	
+	public int getCode() {
+		if (cause != null) {
+			return -1;
+		} else {
+			return response.getCode();
+		}
+	}
+	
+	public Exception getCause() {
+		return cause;
+	}
+	
+	public Response getResponse() {
+		return response;
+	}
+
+	public String getMessage() {
+		if (cause != null) {
+			return cause.getMessage();
+		} else {
+			return response.getString();
+		}
+	}
+
+	public void printStackTrace() {
+		if (cause != null) {
+			cause.printStackTrace();
+		} else {
+			System.out.println(response.getString());
+		}
+	}
+
+	public String toString() {
+		return getMessage();
 	}
 }
