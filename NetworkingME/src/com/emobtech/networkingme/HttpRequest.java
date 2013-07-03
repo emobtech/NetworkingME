@@ -66,6 +66,7 @@ public final class HttpRequest extends Request {
 		String CONTENT_LENGTH = "Content-Length";
 		String CONTENT_TYPE = "Content-Type";
 		String LOCATION = "Location";
+		String USER_AGENT = "User-Agent";
 	}
 
 	private String method;
