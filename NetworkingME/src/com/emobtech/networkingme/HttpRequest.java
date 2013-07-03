@@ -13,6 +13,7 @@ public final class HttpRequest extends Request {
 	public static interface Method {
 		String GET = "GET";
 		String POST = "POST";
+		String HEAD = "HEAD";
 	}
 	
 	public static interface Code {
@@ -70,12 +71,18 @@ public final class HttpRequest extends Request {
 	}
 	
 	public void setBody(Body body) {
+		if (!Method.POST.equals(method)) {
+			throw new IllegalStateException("Request's method must be POST!");
+		}
+		//
 		this.body = body;
 	}
 	
 	Response send() throws IOException {
+		final String url = getURL().toEncodedString();
+		//
 		HttpConnection conn =
-			(HttpConnection)Connector.open(getURL().toEncodedString());
+			(HttpConnection)Connector.open(url, Connector.READ_WRITE);
 		//
 		conn.setRequestMethod(method);
 		//
@@ -122,7 +129,9 @@ public final class HttpRequest extends Request {
 	}
 	
 	private void checkMethod(String method) {
-		if (!Method.GET.equals(method) && !Method.POST.equals(method)) {
+		if (!Method.GET.equals(method)
+				&& !Method.POST.equals(method) 
+				&& !Method.HEAD.equals(method)) {
 			throw new IllegalArgumentException("Method invalid!");
 		}
 	}

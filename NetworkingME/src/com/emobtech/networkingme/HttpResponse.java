@@ -1,6 +1,7 @@
 package com.emobtech.networkingme;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
@@ -10,12 +11,12 @@ public final class HttpResponse extends Response {
 	
 	private int code;
 	private byte[] buffer;
-	private Hashtable headers;
+	private Hashtable header;
 	
 	HttpResponse(HttpConnection conn) throws IOException {
 		code = conn.getResponseCode();
-		buffer = Util.readBytes(conn.openInputStream());
-		headers = readHeaders(conn);
+		buffer = readBody(conn);
+		header = readHeader(conn);
 	}
 
 	public boolean wasSuccessfull() {
@@ -35,7 +36,7 @@ public final class HttpResponse extends Response {
 		try {
 			return new String(buffer, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			return null;
+			return new String(buffer);
 		}
 	}
 
@@ -48,7 +49,7 @@ public final class HttpResponse extends Response {
 	}
 	
 	public String getHeader(String key) {
-		return (String)headers.get(key.toLowerCase());
+		return (String)header.get(key.toLowerCase());
 	}
 	
 	public boolean wasRedirected() {
@@ -61,8 +62,18 @@ public final class HttpResponse extends Response {
 		//
 		return location != null ? new URL(location) : null;
 	}
+	
+	private byte[] readBody(HttpConnection conn) throws IOException {
+		InputStream in = conn.openInputStream();
+		//
+		try {
+			return Util.readBytes(in);
+		} finally {
+			in.close();
+		}
+	}
 
-	private Hashtable readHeaders(HttpConnection conn) throws IOException {
+	private Hashtable readHeader(HttpConnection conn) throws IOException {
 		final int END = 100;
 		//
 		String key;

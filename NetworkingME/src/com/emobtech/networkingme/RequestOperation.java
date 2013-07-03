@@ -6,7 +6,7 @@ import java.io.IOException;
 public final class RequestOperation implements Runnable {
 	
 	public static interface Listener {
-		void onSuccess(Request request, Response response);
+		void onComplete(Request request, Response response);
 		void onFailure(Request request, Exception exception);
 	}
 
@@ -21,13 +21,13 @@ public final class RequestOperation implements Runnable {
 		this.request = request;
 	}
 	
-	public void start(Listener listener) {
+	public void execute(Listener listener) {
 		this.listener = listener;
 		//
 		ThreadDispatcher.getInstance().dispatch(this);
 	}
 	
-	public Response start() throws IOException, SecurityException {
+	public Response execute() throws IOException, SecurityException {
 		return request.send();
 	}
 
@@ -36,7 +36,7 @@ public final class RequestOperation implements Runnable {
 			Response response = request.send();
 			//
 			if (listener != null) {
-				listener.onSuccess(request, response);
+				listener.onComplete(request, response);
 			}
 		} catch (Exception e) {
 			if (listener != null) {
