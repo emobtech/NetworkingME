@@ -45,6 +45,7 @@ public final class HttpClient {
 	
 	private URL baseURL;
 	private Hashtable headers;
+	private boolean autoRedirect = true;
 	
 	public HttpClient(URL baseURL) {
 		if (baseURL == null) {
@@ -59,14 +60,25 @@ public final class HttpClient {
 	}
 	
 	public void setUserAgent(String userAgent) {
+		if (Util.isEmptyString(userAgent)) {
+			throw new IllegalArgumentException("UserAgent null or empty!");
+		}
+		//
 		setHeader(HttpRequest.Header.USER_AGENT, userAgent);
 	}
 	
 	public void setCookieEnabled(boolean enabled) {
-		
+	}
+	
+	public void setAutoRedirectEnabled(boolean enabled) {
+		autoRedirect = true;
 	}
 	
 	public void setHeader(String key, String value) {
+		if (Util.isEmptyString(key) || Util.isEmptyString(value)) {
+			throw new IllegalArgumentException("Key/Value null or empty!");
+		}
+		//
 		if (headers == null) {
 			headers = new Hashtable();
 		}
@@ -75,29 +87,47 @@ public final class HttpClient {
 	}
 	
 	public void removeHeader(String key) {
+		if (Util.isEmptyString(key)) {
+			throw new IllegalArgumentException("Key null or empty!");
+		}
+		//
+		if (headers != null) {
+			headers.remove(key);
+		}
 	}
 	
 	public void setBasicAuthentication(String username, String password) {
+		if (Util.isEmptyString(username) || Util.isEmptyString(password)) {
+			throw new IllegalArgumentException(
+				"Username/Password null or empty!");
+		}
 	}
 	
 	public void setTokenAuthentication(String token) {
+		if (Util.isEmptyString(token)) {
+			throw new IllegalArgumentException("Token null or empty!");
+		}
 	}
 
 	public void clearHeaders() {
-	}
-	
-	public void clearAuthentications() {
+		if (headers != null) {
+			headers.clear();
+		}
 	}
 	
 	public void get(String path, Listener listener) {
-		request(new HttpRequest(new URL(baseURL, path)), listener);
+		get(path, null, listener);
 	}
 
 	public void get(String path, Hashtable parameters, Listener listener) {
+		checkPath(path);
+		//
 		request(new HttpRequest(new URL(baseURL, path, parameters)), listener);
 	}
 
 	public void postForm(String path, Hashtable parameters, Listener listener) {
+		checkPath(path);
+		//
 		HttpRequest req =
 			new HttpRequest(new URL(baseURL, path), HttpRequest.Method.POST);
 		//
@@ -107,12 +137,12 @@ public final class HttpClient {
 	}
 
 	public void head(String path, Listener listener) {
-		request(
-			new HttpRequest(
-				new URL(baseURL, path), HttpRequest.Method.HEAD), listener);
+		head(path, null, listener);
 	}
 	
 	public void head(String path, Hashtable parameters, Listener listener) {
+		checkPath(path);
+		//
 		request(
 			new HttpRequest(
 				new URL(baseURL, path, parameters),
@@ -120,38 +150,42 @@ public final class HttpClient {
 			listener);
 	}
 
-	void request(final HttpRequest request, final Listener listener) {
-		attachHeaders(request);
-		attachCookies(request);
+	private void request(final HttpRequest request, final Listener listener) {
+		writeHeaders(request);
+		writeCookies(request);
 		//
 		new RequestOperation(request).execute(new RequestOperation.Listener() {
-			public void onComplete(Request req, Response res) {
-				HttpResponse httpRes = (HttpResponse)res;
+			public void onComplete(Request request, Response response) {
+				HttpResponse res = (HttpResponse)response;
 				//
-				readCookies(httpRes);
-				//
-				if (httpRes.wasSuccessfull()) {
-					if (httpRes.wasRedirected()) {
-						redirectRequest(
-							request, httpRes.getRedirectURL(), listener);
-					} else {
-						if (listener != null) {
-							listener.onSuccess(request, httpRes);
-						}
-					}
-				} else {
-					if (listener != null) {
-						listener.onFailure(request, new RequestException(res));
-					}
-				}
+				readCookies(res);
+				handleResponse((HttpRequest)request, res, listener);
 			}
 
-			public void onFailure(Request req, RequestException exception) {
+			public void onFailure(Request request, RequestException exception) {
 				if (listener != null) {
-					listener.onFailure(request, exception);
+					listener.onFailure((HttpRequest)request, exception);
 				}
 			}
 		});
+	}
+	
+	private void handleResponse(HttpRequest request, HttpResponse response,
+		Listener listener) {
+		if (response.wasSuccessfull()) {
+			if (autoRedirect && response.wasRedirected()) {
+				redirectRequest(
+					request, response.getRedirectURL(), listener);
+			} else {
+				if (listener != null) {
+					listener.onSuccess(request, response);
+				}
+			}
+		} else {
+			if (listener != null) {
+				listener.onFailure(request, new RequestException(response));
+			}
+		}
 	}
 	
 	private void redirectRequest(HttpRequest originalRequest, URL redirectURL,
@@ -159,7 +193,7 @@ public final class HttpClient {
 		request(new HttpRequest(redirectURL, originalRequest), listener);
 	}
 	
-	private void attachHeaders(HttpRequest request) {
+	private void writeHeaders(HttpRequest request) {
 		if (headers != null && headers.size() > 0) {
 			String key;
 			Enumeration keys = headers.keys();
@@ -172,9 +206,15 @@ public final class HttpClient {
 		}
 	}
 	
-	private void attachCookies(HttpRequest request) {
+	private void writeCookies(HttpRequest request) {
 	}
 	
 	private void readCookies(HttpResponse response) {
+	}
+	
+	private void checkPath(String path) {
+		if (Util.isEmptyString(path)) {
+			throw new IllegalArgumentException("Path null or empty!");
+		}
 	}
 }

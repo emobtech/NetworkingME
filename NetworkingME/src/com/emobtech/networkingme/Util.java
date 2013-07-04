@@ -106,6 +106,10 @@ final class Util {
 	}
 	
 	public static String toQueryString(Hashtable parameters) {
+		if (parameters == null || parameters.size() == 0) {
+			return "";
+		}
+		//
 		String key;
 		StringBuffer queryStr = new StringBuffer();
 		Enumeration keys = parameters.keys();
@@ -124,7 +128,30 @@ final class Util {
 		//
 		return queryStr.toString();
 	}
-
+	
+	public static String formatPath(String path) {
+		if (isEmptyString(path)) {
+			return "";
+		}
+		//
+		if (path.startsWith("/")) {
+			return path;
+		} else {
+			return '/' + path;
+		}
+	}
+	
+	public static String formatQueryString(String queryString) {
+		if (isEmptyString(queryString)) {
+			return "";
+		}
+		//
+		if (queryString.startsWith("?")) {
+			return queryString;
+		} else {
+			return '?' + queryString;
+		}
+	}
 	
 	/**
 	 * <p>
