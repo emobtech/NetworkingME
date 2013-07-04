@@ -31,11 +31,14 @@ public final class URL {
 	private String url;
 	
 	URL(URL baseURL, String path) {
-		this(baseURL.url + '/' + path);
+		this(baseURL.url + Util.formatPath(path));
 	}
 	
 	URL(URL baseURL, String path, Hashtable parameters) {
-		this(baseURL.url + '/' + path + '?' + Util.toQueryString(parameters));
+		this(
+			baseURL.url + 
+			Util.formatPath(path) + 
+			Util.formatQueryString(Util.toQueryString(parameters)));
 	}
 	
 	public URL(String url) {

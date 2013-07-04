@@ -93,6 +93,10 @@ public final class HttpRequest extends Request {
 	}
 	
 	public void setHeader(String key, String value) {
+		if (Util.isEmptyString(key) || Util.isEmptyString(value)) {
+			throw new IllegalArgumentException("Key/Value null or empty!");
+		}
+		//
 		if (headers == null) {
 			headers = new Hashtable();
 		}
@@ -116,8 +120,8 @@ public final class HttpRequest extends Request {
 		//
 		conn.setRequestMethod(method);
 		//
-		attachHeader(conn);
-		attachBody(conn);
+		writeHeader(conn);
+		writeBody(conn);
 		//
 		try {
 			HttpResponse response = new HttpResponse(conn);
@@ -128,7 +132,7 @@ public final class HttpRequest extends Request {
 		}
 	}
 	
-	private void attachHeader(HttpConnection conn) throws IOException {
+	private void writeHeader(HttpConnection conn) throws IOException {
 		if (headers != null && headers.size() > 0) {
 			String key;
 			Enumeration keys = headers.keys();
@@ -141,7 +145,7 @@ public final class HttpRequest extends Request {
 		}
 	}
 	
-	private void attachBody(HttpConnection conn) throws IOException {
+	private void writeBody(HttpConnection conn) throws IOException {
 		if (Method.POST.equals(method) && body != null) {
 			conn.setRequestProperty(Header.CONTENT_TYPE, body.getType());
 			conn.setRequestProperty(
