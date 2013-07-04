@@ -22,6 +22,7 @@
  */
 package com.emobtech.networkingme;
 
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 public final class HttpClient {
@@ -43,6 +44,7 @@ public final class HttpClient {
 	}
 	
 	private URL baseURL;
+	private Hashtable headers;
 	
 	public HttpClient(URL baseURL) {
 		if (baseURL == null) {
@@ -65,6 +67,11 @@ public final class HttpClient {
 	}
 	
 	public void setHeader(String key, String value) {
+		if (headers == null) {
+			headers = new Hashtable();
+		}
+		//
+		headers.put(key, value);
 	}
 	
 	public void removeHeader(String key) {
@@ -91,6 +98,12 @@ public final class HttpClient {
 	}
 
 	public void postForm(String path, Hashtable parameters, Listener listener) {
+		HttpRequest req =
+			new HttpRequest(new URL(baseURL, path), HttpRequest.Method.POST);
+		//
+		req.setBody(new WebFormBody(parameters));
+		//
+		request(req, listener);
 	}
 
 	public void head(String path, Listener listener) {
@@ -109,12 +122,13 @@ public final class HttpClient {
 
 	void request(final HttpRequest request, final Listener listener) {
 		attachHeaders(request);
-		attachAuthorizations(request);
 		attachCookies(request);
 		//
 		new RequestOperation(request).execute(new RequestOperation.Listener() {
 			public void onComplete(Request req, Response res) {
 				HttpResponse httpRes = (HttpResponse)res;
+				//
+				readCookies(httpRes);
 				//
 				if (httpRes.wasSuccessfull()) {
 					if (httpRes.wasRedirected()) {
@@ -146,14 +160,21 @@ public final class HttpClient {
 	}
 	
 	private void attachHeaders(HttpRequest request) {
-		
-	}
-	
-	private void attachAuthorizations(HttpRequest request) {
-		
+		if (headers != null && headers.size() > 0) {
+			String key;
+			Enumeration keys = headers.keys();
+			//
+			while (keys.hasMoreElements()) {
+				key = (String)keys.nextElement();
+				//
+				request.setHeader(key, (String)headers.get(key));
+			}
+		}
 	}
 	
 	private void attachCookies(HttpRequest request) {
-		
+	}
+	
+	private void readCookies(HttpResponse response) {
 	}
 }

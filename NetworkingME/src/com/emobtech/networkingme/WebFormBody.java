@@ -23,11 +23,20 @@
 package com.emobtech.networkingme;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Hashtable;
 
 public final class WebFormBody extends Body {
 	
-	private StringBuffer fields;
+	private StringBuffer fieldsStr;
 	private byte[] body;
+	
+	public WebFormBody(Hashtable fields) {
+		fieldsStr.append(Util.toQueryString(fields));
+	}
+	
+	public WebFormBody() {
+		fieldsStr = new StringBuffer();
+	}
 	
 	public String getType() {
 		return "application/x-www-form-urlencoded";
@@ -50,27 +59,23 @@ public final class WebFormBody extends Body {
 			throw new IllegalArgumentException("Name/Value null or empty!");
 		}
 		//
-		if (fields == null) {
-			fields = new StringBuffer();
+		if (fieldsStr.length() > 0) {
+			fieldsStr.append('&');
 		}
 		//
-		if (fields.length() > 0) {
-			fields.append('&');
-		}
-		//
-		fields.append(Util.encodeString(name));
-		fields.append('=');
-		fields.append(Util.encodeString(value));
+		fieldsStr.append(Util.encodeString(name));
+		fieldsStr.append('=');
+		fieldsStr.append(Util.encodeString(value));
 		//
 		body = null;
 	}
 
 	private void process() {
-		if (body == null && fields != null && fields.length() > 0) {
+		if (body == null && fieldsStr.length() > 0) {
 			try {
-				body = fields.toString().getBytes("UTF-8");
+				body = fieldsStr.toString().getBytes("UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				body = fields.toString().getBytes();
+				body = fieldsStr.toString().getBytes();
 			}
 		}
 	}
