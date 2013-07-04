@@ -85,6 +85,23 @@ public final class HttpResponse extends Response {
 		return location != null ? new URL(location) : null;
 	}
 	
+	public Cookie[] getCookies() {
+		String cookie = getHeader(HttpRequest.Header.SET_COOKIE);
+		//
+		if (Util.isEmptyString(cookie)) {
+			return new Cookie[0];
+		} else {
+			String[] cookiesStr = Util.splitString(cookie, '|');
+			Cookie[] cookies = new Cookie[cookiesStr.length];
+			//
+			for (int i = 0; i < cookiesStr.length; i++) {
+				cookies[i] = new Cookie(cookiesStr[i]);
+			}
+			//
+			return cookies;
+		}
+	}
+	
 	private byte[] readBody(HttpConnection conn) throws IOException {
 		InputStream in = conn.openInputStream();
 		//
@@ -109,7 +126,7 @@ public final class HttpResponse extends Response {
 				value = (String)headers.get(key);
 				//
 				if (value != null) {
-					value += ';' + conn.getHeaderField(i);
+					value += '|' + conn.getHeaderField(i);
 				} else {
 					value = conn.getHeaderField(i);
 				}
