@@ -46,6 +46,8 @@ public final class HttpClient {
 	private URL baseURL;
 	private Hashtable headers;
 	private boolean autoRedirect = true;
+	private boolean trackCookie = true;
+	private Cookie[] cookies;
 	
 	public HttpClient(URL baseURL) {
 		if (baseURL == null) {
@@ -67,7 +69,8 @@ public final class HttpClient {
 		setHeader(HttpRequest.Header.USER_AGENT, userAgent);
 	}
 	
-	public void setCookieEnabled(boolean enabled) {
+	public void setTrackCookieEnabled(boolean enabled) {
+		trackCookie = enabled;
 	}
 	
 	public void setAutoRedirectEnabled(boolean enabled) {
@@ -207,9 +210,17 @@ public final class HttpClient {
 	}
 	
 	private void writeCookies(HttpRequest request) {
+		if (trackCookie) {
+			for (int i = 0; i < cookies.length; i++) {
+				request.addCookie(cookies[i]);
+			}
+		}
 	}
 	
 	private void readCookies(HttpResponse response) {
+		if (trackCookie) {
+			cookies = response.getCookies();
+		}
 	}
 	
 	private void checkPath(String path) {

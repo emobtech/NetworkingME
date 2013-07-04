@@ -67,6 +67,8 @@ public final class HttpRequest extends Request {
 		String CONTENT_TYPE = "Content-Type";
 		String LOCATION = "Location";
 		String USER_AGENT = "User-Agent";
+		String COOKIE = "Cookie";
+		String SET_COOKIE = "Set-Cookie";
 	}
 
 	private String method;
@@ -102,6 +104,24 @@ public final class HttpRequest extends Request {
 		}
 		//
 		headers.put(key, value);
+	}
+	
+	public void addCookie(Cookie cookie) {
+		if (cookie == null) {
+			throw new IllegalArgumentException("Cookie null!");
+		}
+		//
+		String cookieStr = cookie.toString();
+		//
+		if (headers != null) {
+			String cookieHeader = (String)headers.get(Header.COOKIE);
+			//
+			if (cookieHeader != null) {
+				cookieStr += ';' + cookieHeader;
+			}
+		}
+		//
+		setHeader(Header.COOKIE, cookieStr);
 	}
 	
 	public void setBody(Body body) {
