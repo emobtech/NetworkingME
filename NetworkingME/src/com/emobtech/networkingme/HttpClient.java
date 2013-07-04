@@ -28,7 +28,7 @@ public final class HttpClient {
 	
 	public static interface Listener {
 		public void onSuccess(HttpRequest request, HttpResponse response);
-		public void onFailure(HttpRequest request, RequestException response);
+		public void onFailure(HttpRequest request, RequestException exception);
 	}
 	
 	public static abstract class ContentListener implements Listener {
@@ -36,7 +36,7 @@ public final class HttpClient {
 		public abstract void onStringReceived(String string);
 		public abstract void onBytesReceived(byte[] bytes);
 		
-		public void onSuccess(HttpRequest request, HttpResponse response) {
+		public final void onSuccess(HttpRequest request, HttpResponse response) {
 			onBytesReceived(response.getBytes());
 			onStringReceived(response.getString());
 		}
@@ -60,6 +60,10 @@ public final class HttpClient {
 		setHeader(HttpRequest.Header.USER_AGENT, userAgent);
 	}
 	
+	public void setCookieEnabled(boolean enabled) {
+		
+	}
+	
 	public void setHeader(String key, String value) {
 	}
 	
@@ -77,22 +81,79 @@ public final class HttpClient {
 	
 	public void clearAuthentications() {
 	}
-
-	public void get(String path, Listener listener) {
-	}
 	
+	public void get(String path, Listener listener) {
+		request(new HttpRequest(new URL(baseURL, path)), listener);
+	}
+
 	public void get(String path, Hashtable parameters, Listener listener) {
+		request(new HttpRequest(new URL(baseURL, path, parameters)), listener);
 	}
 
-	public void post(String path, Listener listener) {
-	}
-
-	public void post(String path, Hashtable parameters, Listener listener) {
+	public void postForm(String path, Hashtable parameters, Listener listener) {
 	}
 
 	public void head(String path, Listener listener) {
+		request(
+			new HttpRequest(
+				new URL(baseURL, path), HttpRequest.Method.HEAD), listener);
 	}
 	
-	public void request(HttpRequest request, Listener listener) {
+	public void head(String path, Hashtable parameters, Listener listener) {
+		request(
+			new HttpRequest(
+				new URL(baseURL, path, parameters),
+				HttpRequest.Method.HEAD),
+			listener);
+	}
+
+	void request(final HttpRequest request, final Listener listener) {
+		attachHeaders(request);
+		attachAuthorizations(request);
+		attachCookies(request);
+		//
+		new RequestOperation(request).execute(new RequestOperation.Listener() {
+			public void onComplete(Request req, Response res) {
+				HttpResponse httpRes = (HttpResponse)res;
+				//
+				if (httpRes.wasSuccessfull()) {
+					if (httpRes.wasRedirected()) {
+						redirectRequest(
+							request, httpRes.getRedirectURL(), listener);
+					} else {
+						if (listener != null) {
+							listener.onSuccess(request, httpRes);
+						}
+					}
+				} else {
+					if (listener != null) {
+						listener.onFailure(request, new RequestException(res));
+					}
+				}
+			}
+
+			public void onFailure(Request req, RequestException exception) {
+				if (listener != null) {
+					listener.onFailure(request, exception);
+				}
+			}
+		});
+	}
+	
+	private void redirectRequest(HttpRequest originalRequest, URL redirectURL,
+		Listener listener) {
+		request(new HttpRequest(redirectURL, originalRequest), listener);
+	}
+	
+	private void attachHeaders(HttpRequest request) {
+		
+	}
+	
+	private void attachAuthorizations(HttpRequest request) {
+		
+	}
+	
+	private void attachCookies(HttpRequest request) {
+		
 	}
 }

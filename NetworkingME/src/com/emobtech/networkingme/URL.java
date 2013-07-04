@@ -22,11 +22,21 @@
  */
 package com.emobtech.networkingme;
 
+import java.util.Hashtable;
+
 //scheme://domain:port/path?query_string#fragment_id
 
 public final class URL {
 	
 	private String url;
+	
+	URL(URL baseURL, String path) {
+		this(baseURL.url + '/' + path);
+	}
+	
+	URL(URL baseURL, String path, Hashtable parameters) {
+		this(baseURL.url + '/' + path + '?' + Util.toQueryString(parameters));
+	}
 	
 	public URL(String url) {
 		if (Util.isEmptyString(url)) {
@@ -176,7 +186,7 @@ public final class URL {
 		//
 		if (queryString != null) {
 			encodedUrl.append("?");
-			encodedUrl.append(encodeQueryString(queryString));
+			encodedUrl.append(Util.encodeQueryString(queryString));
 		}
 		//
 		String fragment = getFragment();
@@ -187,21 +197,6 @@ public final class URL {
 		}
 		//
 		return encodedUrl.toString();
-	}
-	
-	String encodeQueryString(String queryString) {
-		StringBuffer encodedQueryString = new StringBuffer();
-		String[] params = Util.splitString(queryString, '&');
-		//
-		for (int i = 0; i < params.length; i++) {
-			String[] paramValue = Util.splitString(params[i], '=');
-			//
-			encodedQueryString.append(paramValue[0]);
-			encodedQueryString.append('=');
-			encodedQueryString.append(Util.encodeString(paramValue[1]));
-		}
-		//
-		return encodedQueryString.toString();
 	}
 	
 	public static void main(String[] args) {

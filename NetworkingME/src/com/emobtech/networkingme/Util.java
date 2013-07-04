@@ -25,6 +25,8 @@ package com.emobtech.networkingme;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 final class Util {
@@ -81,8 +83,48 @@ final class Util {
 	}
 	
 	public static String encodeString(String str) {
-		return URLEncoder.encode(str, "UTF-8");
+		if (str.indexOf('%') == -1) {
+			return URLEncoder.encode(str, "UTF-8");
+		} else {
+			return str;
+		}
 	}
+	
+	public static String encodeQueryString(String queryString) {
+		StringBuffer encodedQueryString = new StringBuffer();
+		String[] params = Util.splitString(queryString, '&');
+		//
+		for (int i = 0; i < params.length; i++) {
+			String[] paramValue = Util.splitString(params[i], '=');
+			//
+			encodedQueryString.append(encodeString(paramValue[0]));
+			encodedQueryString.append('=');
+			encodedQueryString.append(encodeString(paramValue[1]));
+		}
+		//
+		return encodedQueryString.toString();
+	}
+	
+	public static String toQueryString(Hashtable parameters) {
+		String key;
+		StringBuffer queryStr = new StringBuffer();
+		Enumeration keys = parameters.keys();
+		//
+		while (keys.hasMoreElements()) {
+			key = (String)keys.nextElement();
+			//
+			queryStr.append(encodeString(key));
+			queryStr.append('=');
+			queryStr.append(encodeString((String)parameters.get(key)));
+			
+			if (keys.hasMoreElements()) {
+				queryStr.append('&');
+			}
+		}
+		//
+		return queryStr.toString();
+	}
+
 	
 	/**
 	 * <p>

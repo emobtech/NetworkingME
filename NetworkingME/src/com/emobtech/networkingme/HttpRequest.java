@@ -76,6 +76,13 @@ public final class HttpRequest extends Request {
 	public HttpRequest(URL url) {
 		this(url, Method.GET);
 	}
+	
+	HttpRequest(URL url, HttpRequest mirrorRequest) {
+		this(url, mirrorRequest.method);
+		//
+		this.headers = mirrorRequest.headers;
+		this.body = mirrorRequest.body;
+	}
 
 	public HttpRequest(URL url, String method) {
 		super(url);
