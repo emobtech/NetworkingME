@@ -28,6 +28,11 @@ import java.util.Hashtable;
 
 public final class URL {
 	
+	private static final String HTTP_SCHEME = "http";
+	private static final int HTTP_PORT = 80;
+	private static final String HTTPS_SCHEME = "https";
+	private static final int HTTPS_PORT = 443;
+	
 	private String url;
 	
 	URL(URL baseURL, String path) {
@@ -86,10 +91,10 @@ public final class URL {
 		if (port == null) {
 			String scheme = getScheme().toLowerCase();
 			//
-			if ("http".equals(scheme)) {
-				port = "80";
-			} else if ("https".equals(scheme)) {
-				port = "443";
+			if (HTTP_SCHEME.equals(scheme)) {
+				port = String.valueOf(HTTP_PORT);
+			} else if (HTTPS_SCHEME.equals(scheme)) {
+				port = String.valueOf(HTTPS_PORT);
 			} else {
 				port = "-1";
 			}
@@ -178,12 +183,16 @@ public final class URL {
 		//
 		int port = getPort();
 		//
-		if (port != -1) {
+		if (port != -1 & port != HTTP_PORT && port != HTTPS_PORT) {
 			encodedUrl.append(":");
 			encodedUrl.append(port);
 		}
 		//
-		encodedUrl.append(getPath());
+		String path = getPath();
+		//
+		if (path != null) {
+			encodedUrl.append(path);
+		}
 		//
 		String queryString = getQueryString();
 		//

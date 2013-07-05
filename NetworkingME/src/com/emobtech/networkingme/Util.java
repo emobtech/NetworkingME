@@ -35,6 +35,9 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 final class Util {
+	public static final String UTF8 = "UTF-8";
+	public static final String USER_AGENT = "NetworkingME/1.0 (JavaME; Profile/MIDP-2.0 Configuration/CLDC-1.0)";
+	
 	/**
      * <p>
      * Split a string based on a given delimiter.
@@ -93,7 +96,7 @@ final class Util {
 	
 	public static String encodeStringURL(String str) {
 		if (str.indexOf('%') == -1) {
-			return encodeStringURL(str, "UTF-8");
+			return encodeStringURL(str, UTF8);
 		} else {
 			return str;
 		}
@@ -222,12 +225,9 @@ final class Util {
 			return str;
 		}
 		//
-		if (encoding == null) {
-			encoding = System.getProperty("microedition.encoding");
+		if (isEmptyString(encoding)) {
+			encoding = getSystemProperty("microedition.encoding", UTF8);
 		}
-		if (encoding == null) {
-			encoding = "UTF-8";
-		}		
 		//
 		ByteArrayInputStream bIn;
 		//
@@ -335,6 +335,12 @@ final class Util {
 		}
 		//
 		return dest.toString();
+	}
+	
+	public static String getSystemProperty(String key, String defaultValue) {
+		String value = System.getProperty(key);
+		//
+		return isEmptyString(value) ? defaultValue : value;
 	}
 	
 	/**

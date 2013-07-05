@@ -63,13 +63,18 @@ public final class HttpRequest extends Request {
 	}
 	
 	public static interface Header {
+		String ACCEPT = "Accept";
+		String ACCEPT_CHARSET = "Accept-Charset";
+		String ACCEPT_ENCODING = "Accept-Encoding";
+		String ACCEPT_LANGUAGE = "Accept-Language";
+		String AUTHORIZATION = "Authorization";
+		String CACHE_CONTROL = "Cache-Control";
 		String CONTENT_LENGTH = "Content-Length";
 		String CONTENT_TYPE = "Content-Type";
-		String LOCATION = "Location";
-		String USER_AGENT = "User-Agent";
 		String COOKIE = "Cookie";
+		String LOCATION = "Location";
 		String SET_COOKIE = "Set-Cookie";
-		String AUTHORIZATION = "Authorization";
+		String USER_AGENT = "User-Agent";
 	}
 
 	private String method;

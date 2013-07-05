@@ -32,7 +32,7 @@ public final class HttpClient {
 	
 	private URL baseURL;
 	private Hashtable headers;
-	private boolean autoRedirect = true;
+	private boolean handleRedirect = true;
 	private boolean trackCookie = true;
 	private Vector cookies;
 	
@@ -42,6 +42,8 @@ public final class HttpClient {
 		}
 		//
 		this.baseURL = baseURL;
+		//
+		setDefaultHeaders();
 	}
 	
 	public URL getBaseURL() {
@@ -60,8 +62,8 @@ public final class HttpClient {
 		trackCookie = enabled;
 	}
 	
-	public void setAutoRedirect(boolean enabled) {
-		autoRedirect = true;
+	public void setHandleRedirect(boolean enabled) {
+		handleRedirect = enabled;
 	}
 	
 	public void setHeader(String key, String value) {
@@ -111,7 +113,7 @@ public final class HttpClient {
 	public void get(String path, Hashtable parameters, Listener listener) {
 		checkPath(path);
 		//
-		request(new HttpRequest(new URL(baseURL, path, parameters)), listener);
+		perform(new HttpRequest(new URL(baseURL, path, parameters)), listener);
 	}
 	
 	public void post(String path, Body body, Listener listener) {
@@ -122,7 +124,7 @@ public final class HttpClient {
 		//
 		req.setBody(body);
 		//
-		request(req, listener);
+		perform(req, listener);
 	}
 
 	public void postForm(String path, Hashtable parameters, Listener listener) {
@@ -136,26 +138,26 @@ public final class HttpClient {
 	public void head(String path, Hashtable parameters, Listener listener) {
 		checkPath(path);
 		//
-		request(
+		perform(
 			new HttpRequest(
 				new URL(baseURL, path, parameters),
 				HttpRequest.Method.HEAD),
 			listener);
 	}
 
-	public void request(final HttpRequest request, final Listener listener) {
+	public void perform(final HttpRequest request, final Listener listener) {
 		writeHeaders(request);
 		writeCookies(request);
 		//
-		new RequestOperation(request).execute(new RequestOperation.Listener() {
+		new RequestOperation(request).perform(new RequestOperation.Listener() {
 			public void onSuccess(Request request, Response response) {
 				HttpResponse res = (HttpResponse)response;
 				//
-				if (res.wasRedirected() && autoRedirect) {
+				if (res.wasRedirected() && handleRedirect) {
 					HttpRequest req = (HttpRequest)request;
 					URL redirectURL = res.getRedirectURL();
 					//
-					request(new HttpRequest(redirectURL, req), listener);
+					perform(new HttpRequest(redirectURL, req), listener);
 				} else {
 					if (listener != null) {
 						listener.onSuccess(request, response);
@@ -232,5 +234,13 @@ public final class HttpClient {
 		if (Util.isEmptyString(path)) {
 			throw new IllegalArgumentException("Path null or empty!");
 		}
+	}
+	
+	private void setDefaultHeaders() {
+		setHeader(
+			HttpRequest.Header.ACCEPT_LANGUAGE,
+			Util.getSystemProperty("microedition.locale", "en-US"));
+		setHeader(HttpRequest.Header.ACCEPT_CHARSET, Util.UTF8);
+		setHeader(HttpRequest.Header.USER_AGENT, Util.USER_AGENT);
 	}
 }

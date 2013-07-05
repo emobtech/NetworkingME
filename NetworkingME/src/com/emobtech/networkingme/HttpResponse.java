@@ -56,7 +56,7 @@ public final class HttpResponse extends Response {
 
 	public String getString() {
 		try {
-			return new String(buffer, "UTF-8");
+			return new String(buffer, Util.UTF8);
 		} catch (UnsupportedEncodingException e) {
 			return new String(buffer);
 		}
