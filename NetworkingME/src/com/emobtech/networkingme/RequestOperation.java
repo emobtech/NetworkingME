@@ -28,8 +28,21 @@ import java.io.IOException;
 public final class RequestOperation implements Runnable {
 	
 	public static interface Listener {
+		void onSuccess(Request request, Response response);
 		void onComplete(Request request, Response response);
 		void onFailure(Request request, RequestException exception);
+	}
+	
+	public static abstract class ContentListener implements Listener {
+		public abstract void onString(String string);
+		public abstract void onBytes(byte[] bytes);
+		
+		public void onSuccess(Request request, Response response) {
+			onBytes(response.getBytes());
+			onString(response.getString());
+		}
+		
+		public void onComplete(Request request, Response response) {}
 	}
 
 	private Request request;
@@ -59,6 +72,12 @@ public final class RequestOperation implements Runnable {
 			//
 			if (listener != null) {
 				listener.onComplete(request, response);
+				//
+				if (response.wasSuccessfull()) {
+					listener.onSuccess(request, response);
+				} else {
+					listener.onFailure(request, new RequestException(response));
+				}
 			}
 		} catch (Exception e) {
 			if (listener != null) {

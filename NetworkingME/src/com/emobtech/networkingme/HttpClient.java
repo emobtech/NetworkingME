@@ -25,23 +25,9 @@ package com.emobtech.networkingme;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import com.emobtech.networkingme.RequestOperation.Listener;
+
 public final class HttpClient {
-	
-	public static interface Listener {
-		public void onSuccess(HttpRequest request, HttpResponse response);
-		public void onFailure(HttpRequest request, RequestException exception);
-	}
-	
-	public static abstract class ContentListener implements Listener {
-		
-		public abstract void onStringReceived(String string);
-		public abstract void onBytesReceived(byte[] bytes);
-		
-		public final void onSuccess(HttpRequest request, HttpResponse response) {
-			onBytesReceived(response.getBytes());
-			onStringReceived(response.getString());
-		}
-	}
 	
 	private URL baseURL;
 	private Hashtable headers;
@@ -69,11 +55,11 @@ public final class HttpClient {
 		setHeader(HttpRequest.Header.USER_AGENT, userAgent);
 	}
 	
-	public void setTrackCookieEnabled(boolean enabled) {
+	public void setTrackCookie(boolean enabled) {
 		trackCookie = enabled;
 	}
 	
-	public void setAutoRedirectEnabled(boolean enabled) {
+	public void setAutoRedirect(boolean enabled) {
 		autoRedirect = true;
 	}
 	
@@ -127,16 +113,20 @@ public final class HttpClient {
 		//
 		request(new HttpRequest(new URL(baseURL, path, parameters)), listener);
 	}
-
-	public void postForm(String path, Hashtable parameters, Listener listener) {
+	
+	public void post(String path, Body body, Listener listener) {
 		checkPath(path);
 		//
 		HttpRequest req =
 			new HttpRequest(new URL(baseURL, path), HttpRequest.Method.POST);
 		//
-		req.setBody(new WebFormBody(parameters));
+		req.setBody(body);
 		//
 		request(req, listener);
+	}
+
+	public void postForm(String path, Hashtable parameters, Listener listener) {
+		post(path, new WebFormBody(parameters), listener);
 	}
 
 	public void head(String path, Listener listener) {
@@ -153,47 +143,40 @@ public final class HttpClient {
 			listener);
 	}
 
-	private void request(final HttpRequest request, final Listener listener) {
+	public void request(final HttpRequest request, final Listener listener) {
 		writeHeaders(request);
 		writeCookies(request);
 		//
 		new RequestOperation(request).execute(new RequestOperation.Listener() {
-			public void onComplete(Request request, Response response) {
+			public void onSuccess(Request request, Response response) {
 				HttpResponse res = (HttpResponse)response;
 				//
-				readCookies(res);
-				handleResponse((HttpRequest)request, res, listener);
+				if (res.wasRedirected() && autoRedirect) {
+					HttpRequest req = (HttpRequest)request;
+					URL redirectURL = res.getRedirectURL();
+					//
+					request(new HttpRequest(redirectURL, req), listener);
+				} else {
+					if (listener != null) {
+						listener.onSuccess(request, response);
+					}
+				}
+			}
+
+			public void onComplete(Request request, Response response) {
+				readCookies((HttpResponse)response);
+				//
+				if (listener != null) {
+					listener.onComplete(request, response);
+				}
 			}
 
 			public void onFailure(Request request, RequestException exception) {
 				if (listener != null) {
-					listener.onFailure((HttpRequest)request, exception);
+					listener.onFailure(request, exception);
 				}
 			}
 		});
-	}
-	
-	private void handleResponse(HttpRequest request, HttpResponse response,
-		Listener listener) {
-		if (response.wasSuccessfull()) {
-			if (autoRedirect && response.wasRedirected()) {
-				redirectRequest(
-					request, response.getRedirectURL(), listener);
-			} else {
-				if (listener != null) {
-					listener.onSuccess(request, response);
-				}
-			}
-		} else {
-			if (listener != null) {
-				listener.onFailure(request, new RequestException(response));
-			}
-		}
-	}
-	
-	private void redirectRequest(HttpRequest originalRequest, URL redirectURL,
-		Listener listener) {
-		request(new HttpRequest(redirectURL, originalRequest), listener);
 	}
 	
 	private void writeHeaders(HttpRequest request) {
@@ -210,7 +193,7 @@ public final class HttpClient {
 	}
 	
 	private void writeCookies(HttpRequest request) {
-		if (trackCookie) {
+		if (trackCookie && cookies != null) {
 			for (int i = 0; i < cookies.length; i++) {
 				request.addCookie(cookies[i]);
 			}
