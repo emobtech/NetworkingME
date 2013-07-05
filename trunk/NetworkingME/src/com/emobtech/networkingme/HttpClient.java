@@ -24,6 +24,7 @@ package com.emobtech.networkingme;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Vector;
 
 import com.emobtech.networkingme.RequestOperation.Listener;
 
@@ -33,7 +34,7 @@ public final class HttpClient {
 	private Hashtable headers;
 	private boolean autoRedirect = true;
 	private boolean trackCookie = true;
-	private Cookie[] cookies;
+	private Vector cookies;
 	
 	public HttpClient(URL baseURL) {
 		if (baseURL == null) {
@@ -194,15 +195,37 @@ public final class HttpClient {
 	
 	private void writeCookies(HttpRequest request) {
 		if (trackCookie && cookies != null) {
-			for (int i = 0; i < cookies.length; i++) {
-				request.addCookie(cookies[i]);
+			Cookie cookie;
+			//
+			for (int i = cookies.size() -1; i >= 0; i--) {
+				cookie = (Cookie)cookies.elementAt(i);
+				//
+				if (!cookie.isExpired()) {
+					request.addCookie(cookie);
+				}
 			}
 		}
 	}
 	
 	private void readCookies(HttpResponse response) {
 		if (trackCookie) {
-			cookies = response.getCookies();
+			Cookie[] respCookies = response.getCookies();
+			//
+			if (respCookies.length > 0) {
+				if (cookies == null) {
+					cookies = new Vector(respCookies.length);
+				}
+				//
+				for (int i = 0, ci = -1; i < respCookies.length; i++) {
+					ci = cookies.indexOf(respCookies[i]);
+					//
+					if (ci == -1) {
+						cookies.addElement(respCookies[i]);
+					} else {
+						cookies.setElementAt(respCookies[i], ci);
+					}
+				}
+			}
 		}
 	}
 	

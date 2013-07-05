@@ -28,7 +28,7 @@ public final class Cookie {
 	
 	private String cookie;
 	
-	public Cookie(String cookie) {
+	Cookie(String cookie) {
 		if (Util.isEmptyString(cookie)) {
 			throw new IllegalArgumentException("Cookie null or empty!");
 		}
@@ -113,7 +113,23 @@ public final class Cookie {
 			return false;
 		}
 		//
-		return cookie.equals(((Cookie)obj).cookie);
+		Cookie cookie = (Cookie)obj;
+		//
+		try {
+			if (!getName().equals(cookie.getName())) {
+				return false;
+			}
+			if (!getDomain().equals(cookie.getDomain())) {
+				return false;
+			}
+			if (!getPath().equals(cookie.getPath())) {
+				return false;
+			}
+			//
+			return true;
+		} catch (NullPointerException e) {
+			return false;
+		}
 	}
 	
 	/**
@@ -131,13 +147,15 @@ public final class Cookie {
 	}
 	
 	public static void main(String[] args) {
-		Cookie cookie = new Cookie("SSID=Ap4PGTEq; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly");
+		Cookie cookie = new Cookie("SSID=Ap4PGTEq; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2013 22:23:01 GMT; Secure; HttpOnly");
 		//
 		System.out.println("Name: " + cookie.getName());
 		System.out.println("Value: " + cookie.getValue());
 		System.out.println("Path: " + cookie.getPath());
 		System.out.println("Domain: " + cookie.getDomain());
+		System.out.println("Expiration: " + cookie.getExpiration());
 		System.out.println("Secure: " + cookie.isSecure());
 		System.out.println("HttpOnly: " + cookie.isHttpOnly());
+		System.out.println("Expired: " + cookie.isExpired());
 	}
 }
