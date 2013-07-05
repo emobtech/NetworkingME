@@ -91,9 +91,9 @@ final class Util {
 		return out.toByteArray();
 	}
 	
-	public static String encodeString(String str) {
+	public static String encodeStringURL(String str) {
 		if (str.indexOf('%') == -1) {
-			return encodeString(str, "UTF-8");
+			return encodeStringURL(str, "UTF-8");
 		} else {
 			return str;
 		}
@@ -106,9 +106,9 @@ final class Util {
 		for (int i = 0; i < params.length; i++) {
 			String[] paramValue = Util.splitString(params[i], '=');
 			//
-			encodedQueryString.append(encodeString(paramValue[0]));
+			encodedQueryString.append(encodeStringURL(paramValue[0]));
 			encodedQueryString.append('=');
-			encodedQueryString.append(encodeString(paramValue[1]));
+			encodedQueryString.append(encodeStringURL(paramValue[1]));
 		}
 		//
 		return encodedQueryString.toString();
@@ -126,9 +126,9 @@ final class Util {
 		while (keys.hasMoreElements()) {
 			key = (String)keys.nextElement();
 			//
-			queryStr.append(encodeString(key));
+			queryStr.append(encodeStringURL(key));
 			queryStr.append('=');
-			queryStr.append(encodeString((String)parameters.get(key)));
+			queryStr.append(encodeStringURL((String)parameters.get(key)));
 			//
 			if (keys.hasMoreElements()) {
 				queryStr.append('&');
@@ -217,7 +217,7 @@ final class Util {
 		return -1;
 	}
 	
-	public static String encodeString(String str, String encoding) {
+	public static String encodeStringURL(String str, String encoding) {
 		if (isEmptyString(str)) {
 			return str;
 		}
@@ -278,6 +278,63 @@ final class Util {
 	 */
 	public static String getHexChar(int c) {
 		return (c < 16 ? "%0" : "%") + Integer.toHexString(c).toUpperCase();
+	}
+	
+	public static String encodeStringBase64(String str) {
+		if (isEmptyString(str)) {
+			return str;
+		}
+		//
+		final String c =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		//
+		byte[] code = c.getBytes();
+		byte[] s = str.getBytes();
+		int x;
+		int y = str.length() - (str.length() % 3);
+		byte[] coded = new byte[4];
+		StringBuffer dest = new StringBuffer();
+		//
+		for (x = 0; x < y; x += 3) {
+			coded[3] = code[s[x + 2] % 64];
+			coded[0] = code[s[x] >> 2];
+			coded[1] = new Integer((s[x] % 4) << 4).byteValue();
+			coded[1] += s[x + 1] >> 4;
+			coded[1] = code[coded[1]];
+			coded[2] = new Integer((s[x + 1] % 16) << 2).byteValue();
+			coded[2] += s[x + 2] / 64;
+			coded[2] = code[coded[2]];
+			//
+			dest.append(new String(coded));
+		}
+		//
+		x = y;
+		//
+		if (s.length % 3 == 0) {
+			return dest.toString();
+		}
+		//
+		if (s.length % 3 == 1) {
+			coded[2] = '=';
+			coded[3] = '=';
+			coded[0] = code[s[x] >> 2];
+			coded[1] = code[new Integer((s[x] % 4) << 4).byteValue()];
+			//
+			dest.append(new String(coded));
+		}
+		//
+		if (s.length % 3 == 2) {
+			coded[3] = '=';
+			coded[0] = code[s[x] >> 2];
+			coded[1] = new Integer((s[x] % 4) << 4).byteValue();
+			coded[1] += s[x + 1] >> 4;
+			coded[1] = code[coded[1]];
+			coded[2] = code[new Integer((s[x + 1] % 16) << 2).byteValue()];
+			//
+			dest.append(new String(coded));
+		}
+		//
+		return dest.toString();
 	}
 	
 	/**

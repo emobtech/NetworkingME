@@ -69,6 +69,7 @@ public final class HttpRequest extends Request {
 		String USER_AGENT = "User-Agent";
 		String COOKIE = "Cookie";
 		String SET_COOKIE = "Set-Cookie";
+		String AUTHORIZATION = "Authorization";
 	}
 
 	private String method;
