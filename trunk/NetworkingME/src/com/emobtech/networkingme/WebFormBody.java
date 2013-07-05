@@ -73,7 +73,7 @@ public final class WebFormBody extends Body {
 	private void process() {
 		if (body == null && fieldsStr.length() > 0) {
 			try {
-				body = fieldsStr.toString().getBytes("UTF-8");
+				body = fieldsStr.toString().getBytes(Util.UTF8);
 			} catch (UnsupportedEncodingException e) {
 				body = fieldsStr.toString().getBytes();
 			}

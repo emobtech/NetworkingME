@@ -53,7 +53,7 @@ public final class RequestOperation implements Runnable {
 		this.request = request;
 	}
 	
-	public void execute(Listener listener) {
+	public void perform(Listener listener) {
 		this.listener = listener;
 		//
 		ThreadDispatcher.getInstance().dispatch(this);
