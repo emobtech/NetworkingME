@@ -22,12 +22,16 @@
  */
 package com.emobtech.networkingme;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.TimeZone;
 import java.util.Vector;
 
 final class Util {
@@ -41,8 +45,8 @@ final class Util {
      * @throws IllegalArgumentException If str is null.
      */
     public static String[] splitString(String str, char delimiter) {
-    	if (str == null) {
-    		throw new IllegalArgumentException("Str must not be null.");
+    	if (isEmptyString(str)) {
+    		return new String[0];
     	}
     	//
         Vector v = new Vector();
@@ -73,6 +77,10 @@ final class Util {
 	}
 	
 	public static byte[] readBytes(InputStream in) throws IOException {
+		if (in == null) {
+			return new byte[0];
+		}
+		//
 		ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
 		byte[] buffer = new byte[1024];
 		//
@@ -85,7 +93,7 @@ final class Util {
 	
 	public static String encodeString(String str) {
 		if (str.indexOf('%') == -1) {
-			return URLEncoder.encode(str, "UTF-8");
+			return encodeString(str, "UTF-8");
 		} else {
 			return str;
 		}
@@ -158,10 +166,118 @@ final class Util {
 		return name + '=' + value;
 	}
 	
-	//15 Jan 2013 21:47:38 GMT
+	//Wed, 13 Jan 2021 22:23:01 GMT
 	public static Date parseCookieDate(String date) {
-		return null;
-		
+		if (isEmptyString(date)) {
+			return null;
+		}
+		//
+		String[] dateParts = splitString(date, ' ');
+		//
+		if (dateParts.length < 6) {
+			return null;
+		}
+		//
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		//
+		cal.set(Calendar.YEAR, Integer.parseInt(dateParts[3]));
+		cal.set(Calendar.MONTH, getMonth(dateParts[2]));
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dateParts[1]));
+		//
+		String[] timeParts = splitString(dateParts[4], ':');
+		//
+		cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeParts[0]));
+		cal.set(Calendar.MINUTE, Integer.parseInt(timeParts[1]));
+		cal.set(Calendar.SECOND, Integer.parseInt(timeParts[2]));
+		cal.set(Calendar.MILLISECOND, 0);
+		//
+		return cal.getTime();
+	}
+	
+	public static int getMonth(String name) {
+		if (isEmptyString(name)) {
+			throw new IllegalArgumentException("Name is null!");
+		}
+		//
+		name = name.trim().toLowerCase();
+		//
+		final String[] months = {
+			"jan", "feb", "mar", 
+			"apr", "may", "jun", 
+			"jul", "aug", "sep", 
+			"oct", "nov", "dec"
+		};
+		//
+		for (int i = 0; i < months.length; i++) {
+			if (name.startsWith(months[i])) {
+				return i;
+			}
+		}
+		//
+		return -1;
+	}
+	
+	public static String encodeString(String str, String encoding) {
+		if (isEmptyString(str)) {
+			return str;
+		}
+		//
+		if (encoding == null) {
+			encoding = System.getProperty("microedition.encoding");
+		}
+		if (encoding == null) {
+			encoding = "UTF-8";
+		}		
+		//
+		ByteArrayInputStream bIn;
+		//
+		try {
+			bIn = new ByteArrayInputStream(str.getBytes(encoding));
+		} catch (UnsupportedEncodingException e) {
+			bIn = new ByteArrayInputStream(str.getBytes());
+		}
+		//
+		int c = bIn.read();
+		StringBuffer ret = new StringBuffer();
+		//
+		while (c >= 0) {
+			if ((c >= 'a' && c <= 'z')
+					|| (c >= 'A' && c <= 'Z')
+					|| (c >= '0' && c <= '9')
+					|| c == '.'
+					|| c == '-'
+					|| c == '*'
+					|| c == '_') {
+				ret.append((char) c);
+			} else if (c == ' ') {
+				ret.append("%20");
+			} else {
+				if (c < 128) {
+					ret.append(getHexChar(c));
+				} else if (c < 224) {
+					ret.append(getHexChar(c));
+					ret.append(getHexChar(bIn.read()));
+				} else if (c < 240) {
+					ret.append(getHexChar(c));
+					ret.append(getHexChar(bIn.read()));
+					ret.append(getHexChar(bIn.read()));
+				}
+			}
+			//
+			c = bIn.read();
+		}
+		//
+		return ret.toString();
+	}
+	
+	/**
+	 * <p>
+	 * Get a hex value of a char.
+	 * </p>
+	 * @param c Char.
+	 */
+	public static String getHexChar(int c) {
+		return (c < 16 ? "%0" : "%") + Integer.toHexString(c).toUpperCase();
 	}
 	
 	/**
