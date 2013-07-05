@@ -91,12 +91,11 @@ public final class HttpClient {
 			throw new IllegalArgumentException(
 				"Username/Password null or empty!");
 		}
-	}
-	
-	public void setTokenAuthentication(String token) {
-		if (Util.isEmptyString(token)) {
-			throw new IllegalArgumentException("Token null or empty!");
-		}
+		//
+		final String credential =
+			Util.encodeStringBase64(username + ':' + password);
+		//
+		setHeader(HttpRequest.Header.AUTHORIZATION, "Basic " + credential);
 	}
 
 	public void clearHeaders() {

@@ -63,9 +63,9 @@ public final class WebFormBody extends Body {
 			fieldsStr.append('&');
 		}
 		//
-		fieldsStr.append(Util.encodeString(name));
+		fieldsStr.append(Util.encodeStringURL(name));
 		fieldsStr.append('=');
-		fieldsStr.append(Util.encodeString(value));
+		fieldsStr.append(Util.encodeStringURL(value));
 		//
 		body = null;
 	}
