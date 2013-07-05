@@ -111,17 +111,18 @@ public final class HttpRequest extends Request {
 			throw new IllegalArgumentException("Cookie null!");
 		}
 		//
-		String cookieStr = cookie.toString();
+		String cookieValue =
+			Util.formatCookie(cookie.getName(), cookie.getValue());
 		//
 		if (headers != null) {
 			String cookieHeader = (String)headers.get(Header.COOKIE);
 			//
 			if (cookieHeader != null) {
-				cookieStr += ';' + cookieHeader;
+				cookieValue += ';' + cookieHeader;
 			}
 		}
 		//
-		setHeader(Header.COOKIE, cookieStr);
+		setHeader(Header.COOKIE, cookieValue);
 	}
 	
 	public void setBody(Body body) {

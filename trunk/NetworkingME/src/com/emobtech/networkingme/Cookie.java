@@ -22,6 +22,8 @@
  */
 package com.emobtech.networkingme;
 
+import java.util.Date;
+
 public final class Cookie {
 	
 	private String cookie;
@@ -34,6 +36,72 @@ public final class Cookie {
 		this.cookie = cookie;
 	}
 	
+	public String getName() {
+		String nameValue = cookie.substring(0, cookie.indexOf(';'));
+		//
+		return Util.splitString(nameValue, '=')[0];
+	}
+	
+	public String getValue() {
+		String nameValue = cookie.substring(0, cookie.indexOf(';'));
+		//
+		return Util.splitString(nameValue, '=')[1];
+	}
+	
+	public Date getExpiration() {
+		int expireIndex = cookie.indexOf("Expires=");
+		//
+		if (expireIndex != -1) {
+			String date =
+				cookie.substring(
+					expireIndex + 8, cookie.indexOf(';', expireIndex));
+			//
+			return Util.parseCookieDate(date);
+		} else {
+			return null;
+		}
+	}
+	
+	public String getPath() {
+		int pathIndex = cookie.indexOf("Path=");
+		//
+		if (pathIndex != -1) {
+			return cookie.substring(
+				pathIndex + 5, cookie.indexOf(';', pathIndex)); 
+		} else {
+			return null;
+		}
+	}
+	
+	public String getDomain() {
+		int domainIndex = cookie.indexOf("Domain=");
+		//
+		if (domainIndex != -1) {
+			return cookie.substring(
+				domainIndex + 7, cookie.indexOf(';', domainIndex)); 
+		} else {
+			return null;
+		}
+	}
+	
+	public boolean isSecure() {
+		return cookie.indexOf("Secure") != -1;
+	}
+	
+	public boolean isHttpOnly() {
+		return cookie.indexOf("HttpOnly") != -1;
+	}
+	
+	public boolean isExpired() {
+		Date expiration = getExpiration();
+		//
+		if (expiration != null) {
+			return expiration.getTime() < new Date().getTime();
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -60,5 +128,16 @@ public final class Cookie {
 	 */
 	public String toString() {
 		return cookie;
+	}
+	
+	public static void main(String[] args) {
+		Cookie cookie = new Cookie("SSID=Ap4PGTEq; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2021 22:23:01 GMT; Secure; HttpOnly");
+		//
+		System.out.println("Name: " + cookie.getName());
+		System.out.println("Value: " + cookie.getValue());
+		System.out.println("Path: " + cookie.getPath());
+		System.out.println("Domain: " + cookie.getDomain());
+		System.out.println("Secure: " + cookie.isSecure());
+		System.out.println("HttpOnly: " + cookie.isHttpOnly());
 	}
 }

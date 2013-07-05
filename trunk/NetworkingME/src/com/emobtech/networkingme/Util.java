@@ -25,6 +25,7 @@ package com.emobtech.networkingme;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -151,6 +152,16 @@ final class Util {
 		} else {
 			return '?' + queryString;
 		}
+	}
+	
+	public static String formatCookie(String name, String value) {
+		return name + '=' + value;
+	}
+	
+	//15 Jan 2013 21:47:38 GMT
+	public static Date parseCookieDate(String date) {
+		return null;
+		
 	}
 	
 	/**
