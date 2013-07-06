@@ -31,7 +31,7 @@ import com.emobtech.networkingme.RequestOperation.Listener;
 public final class HttpClient {
 	
 	private URL baseURL;
-	private Hashtable headers;
+	private Hashtable header;
 	private boolean handleRedirect = true;
 	private boolean trackCookie = true;
 	private Vector cookies;
@@ -71,11 +71,11 @@ public final class HttpClient {
 			throw new IllegalArgumentException("Key/Value null or empty!");
 		}
 		//
-		if (headers == null) {
-			headers = new Hashtable();
+		if (header == null) {
+			header = new Hashtable();
 		}
 		//
-		String headerValue = (String)headers.get(key);
+		String headerValue = (String)header.get(key);
 		//
 		if (headerValue != null) {
 			headerValue += ',' + value;
@@ -83,7 +83,7 @@ public final class HttpClient {
 			headerValue = value;
 		}
 		//
-		headers.put(key, headerValue);
+		header.put(key, headerValue);
 	}
 	
 	public void removeHeader(String key) {
@@ -91,8 +91,8 @@ public final class HttpClient {
 			throw new IllegalArgumentException("Key null or empty!");
 		}
 		//
-		if (headers != null) {
-			headers.remove(key);
+		if (header != null) {
+			header.remove(key);
 		}
 	}
 	
@@ -108,9 +108,9 @@ public final class HttpClient {
 		setHeader(HttpRequest.Header.AUTHORIZATION, "Basic " + credential);
 	}
 
-	public void clearHeaders() {
-		if (headers != null) {
-			headers.clear();
+	public void clearHeader() {
+		if (header != null) {
+			header.clear();
 		}
 	}
 	
@@ -193,14 +193,14 @@ public final class HttpClient {
 	}
 	
 	private void writeHeader(HttpRequest request) {
-		if (headers != null && headers.size() > 0) {
+		if (header != null && header.size() > 0) {
 			String key;
-			Enumeration keys = headers.keys();
+			Enumeration keys = header.keys();
 			//
 			while (keys.hasMoreElements()) {
 				key = (String)keys.nextElement();
 				//
-				request.setHeader(key, (String)headers.get(key));
+				request.setHeader(key, (String)header.get(key));
 			}
 		}
 	}
