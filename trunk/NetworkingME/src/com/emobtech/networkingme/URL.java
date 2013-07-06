@@ -35,6 +35,14 @@ public final class URL {
 	
 	private String url;
 	
+	public URL(String url) {
+		if (Util.isEmptyString(url)) {
+			throw new IllegalArgumentException("URL null or empty!");
+		}
+		//
+		this.url = url;
+	}
+	
 	URL(URL baseURL, String path) {
 		this(baseURL.url + Util.formatPath(path));
 	}
@@ -45,15 +53,7 @@ public final class URL {
 			Util.formatPath(path) + 
 			Util.formatQueryString(Util.toQueryString(parameters)));
 	}
-	
-	public URL(String url) {
-		if (Util.isEmptyString(url)) {
-			throw new IllegalArgumentException("URL null or empty!");
-		}
-		//
-		this.url = url;
-	}
-	
+		
 	public String getScheme() {
 		return url.substring(0, url.indexOf("://"));
 	}

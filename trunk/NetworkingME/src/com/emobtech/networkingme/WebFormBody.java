@@ -25,17 +25,16 @@ package com.emobtech.networkingme;
 import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
-public final class WebFormBody extends Body {
+public final class WebFormBody implements Body {
 	
-	private StringBuffer fieldsStr;
+	private StringBuffer fieldsStr = new StringBuffer();
 	private byte[] body;
 	
-	public WebFormBody(Hashtable fields) {
-		fieldsStr.append(Util.toQueryString(fields));
-	}
-	
 	public WebFormBody() {
-		fieldsStr = new StringBuffer();
+	}
+
+	WebFormBody(Hashtable fields) {
+		fieldsStr.append(Util.toQueryString(fields));
 	}
 	
 	public String getType() {
@@ -71,7 +70,7 @@ public final class WebFormBody extends Body {
 	}
 
 	private void process() {
-		if (body == null && fieldsStr.length() > 0) {
+		if (body == null) {
 			try {
 				body = fieldsStr.toString().getBytes(Util.UTF8);
 			} catch (UnsupportedEncodingException e) {
