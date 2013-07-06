@@ -78,7 +78,7 @@ public final class HttpRequest extends Request {
 	}
 
 	private String method;
-	private Hashtable headers;
+	private Hashtable header;
 	private Body body;
 
 	public HttpRequest(URL url) {
@@ -88,7 +88,7 @@ public final class HttpRequest extends Request {
 	HttpRequest(URL url, HttpRequest mirrorRequest) {
 		this(url, mirrorRequest.method);
 		//
-		this.headers = mirrorRequest.headers;
+		this.header = mirrorRequest.header;
 		this.body = mirrorRequest.body;
 	}
 
@@ -105,11 +105,11 @@ public final class HttpRequest extends Request {
 			throw new IllegalArgumentException("Key/Value null or empty!");
 		}
 		//
-		if (headers == null) {
-			headers = new Hashtable();
+		if (header == null) {
+			header = new Hashtable();
 		}
 		//
-		String headerValue = (String)headers.get(key);
+		String headerValue = (String)header.get(key);
 		//
 		if (headerValue != null) {
 			headerValue += ',' + value;
@@ -117,7 +117,7 @@ public final class HttpRequest extends Request {
 			headerValue = value;
 		}
 		//
-		headers.put(key, headerValue);
+		header.put(key, headerValue);
 	}
 	
 	public void addCookie(Cookie cookie) {
@@ -160,14 +160,14 @@ public final class HttpRequest extends Request {
 	}
 	
 	private void writeHeader(HttpConnection conn) throws IOException {
-		if (headers != null && headers.size() > 0) {
+		if (header != null && header.size() > 0) {
 			String key;
-			Enumeration keys = headers.keys();
+			Enumeration keys = header.keys();
 			//
 			while (keys.hasMoreElements()) {
 				key = (String)keys.nextElement();
 				//
-				conn.setRequestProperty(key, (String)headers.get(key));
+				conn.setRequestProperty(key, (String)header.get(key));
 			}
 		}
 	}
