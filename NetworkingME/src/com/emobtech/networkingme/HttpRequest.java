@@ -33,9 +33,9 @@ import javax.microedition.io.HttpConnection;
 public final class HttpRequest extends Request {
 	
 	public static interface Method {
-		String GET = "GET";
-		String POST = "POST";
-		String HEAD = "HEAD";
+		String GET = HttpConnection.GET;
+		String POST = HttpConnection.POST;
+		String HEAD = HttpConnection.HEAD;
 	}
 	
 	public static interface Code {
@@ -109,7 +109,15 @@ public final class HttpRequest extends Request {
 			headers = new Hashtable();
 		}
 		//
-		headers.put(key, value);
+		String headerValue = (String)headers.get(key);
+		//
+		if (headerValue != null) {
+			headerValue += ',' + value;
+		} else {
+			headerValue = value;
+		}
+		//
+		headers.put(key, headerValue);
 	}
 	
 	public void addCookie(Cookie cookie) {
@@ -117,16 +125,8 @@ public final class HttpRequest extends Request {
 			throw new IllegalArgumentException("Cookie null!");
 		}
 		//
-		String cookieValue =
+		final String cookieValue =
 			Util.formatCookie(cookie.getName(), cookie.getValue());
-		//
-		if (headers != null) {
-			String cookieHeader = (String)headers.get(Header.COOKIE);
-			//
-			if (cookieHeader != null) {
-				cookieValue += ';' + cookieHeader;
-			}
-		}
 		//
 		setHeader(Header.COOKIE, cookieValue);
 	}
@@ -178,11 +178,10 @@ public final class HttpRequest extends Request {
 			conn.setRequestProperty(
 				Header.CONTENT_LENGTH, String.valueOf(body.getLength()));
 			//
-			OutputStream out = conn.openOutputStream();
+			OutputStream out = conn.openDataOutputStream();
 			//
 			try {
 				out.write(body.getBytes());
-				out.flush();
 			} finally {
 				out.close();
 			}

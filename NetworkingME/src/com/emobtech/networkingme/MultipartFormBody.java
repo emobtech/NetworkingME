@@ -1,4 +1,4 @@
-/* Body.java
+/* MultipartFormBody.java
  * 
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
@@ -22,11 +22,49 @@
  */
 package com.emobtech.networkingme;
 
-public interface Body {
+import java.io.IOException;
+import java.io.InputStream;
+
+public final class MultipartFormBody implements Body {
 	
-	public String getType();
+	private byte[] body;
+	private WebFormBody formBody = new WebFormBody();
 	
-	public long getLength();
+	public MultipartFormBody(InputStream stream) throws IOException {
+		this(Util.readBytes(stream));
+	}
 	
-	public byte[] getBytes();
+	public MultipartFormBody(byte[] data) {
+		if (data == null) {
+			throw new IllegalArgumentException("Data is null!");
+		}
+		//
+		body = data;
+	}
+
+	public String getType() {
+		return "multipart/form-data";
+	}
+
+	public long getLength() {
+		return body.length + formBody.getLength();
+	}
+
+	public byte[] getBytes() {
+		if (formBody.getLength() > 0) {
+			byte[] webBody = formBody.getBytes();
+			byte[] newBody = new byte[body.length + webBody.length];
+			//
+			System.arraycopy(body, 0, newBody, 0, body.length);
+			System.arraycopy(webBody, 0, newBody, body.length, webBody.length);
+			//
+			return newBody;
+		} else {
+			return body;
+		}
+	}
+	
+	public void addField(String name, String value) {
+		formBody.addField(name, value);
+	}
 }

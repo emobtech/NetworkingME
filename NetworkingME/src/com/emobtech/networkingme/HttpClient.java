@@ -75,7 +75,15 @@ public final class HttpClient {
 			headers = new Hashtable();
 		}
 		//
-		headers.put(key, value);
+		String headerValue = (String)headers.get(key);
+		//
+		if (headerValue != null) {
+			headerValue += ',' + value;
+		} else {
+			headerValue = value;
+		}
+		//
+		headers.put(key, headerValue);
 	}
 	
 	public void removeHeader(String key) {
@@ -146,10 +154,12 @@ public final class HttpClient {
 	}
 
 	public void perform(final HttpRequest request, final Listener listener) {
-		writeHeaders(request);
+		writeHeader(request);
 		writeCookies(request);
 		//
-		new RequestOperation(request).perform(new RequestOperation.Listener() {
+		final RequestOperation operation = new RequestOperation(request);
+		//
+		operation.perform(new RequestOperation.Listener() {
 			public void onSuccess(Request request, Response response) {
 				HttpResponse res = (HttpResponse)response;
 				//
@@ -157,7 +167,8 @@ public final class HttpClient {
 					HttpRequest req = (HttpRequest)request;
 					URL redirectURL = res.getRedirectURL();
 					//
-					perform(new HttpRequest(redirectURL, req), listener);
+					operation.setRequest(new HttpRequest(redirectURL, req));
+					operation.perform(this);
 				} else {
 					if (listener != null) {
 						listener.onSuccess(request, response);
@@ -181,7 +192,7 @@ public final class HttpClient {
 		});
 	}
 	
-	private void writeHeaders(HttpRequest request) {
+	private void writeHeader(HttpRequest request) {
 		if (headers != null && headers.size() > 0) {
 			String key;
 			Enumeration keys = headers.keys();
