@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emobtech.networkingme;
+package com.emobtech.networkingme.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -34,7 +34,7 @@ import java.util.Hashtable;
 import java.util.TimeZone;
 import java.util.Vector;
 
-final class Util {
+public final class Util {
 	public static final String UTF8 = "UTF-8";
 	public static final String USER_AGENT = "NetworkingME/1.0 (JavaME; Profile/MIDP-2.0 Configuration/CLDC-1.0)";
 	

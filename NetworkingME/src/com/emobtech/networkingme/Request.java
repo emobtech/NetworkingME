@@ -40,5 +40,5 @@ public abstract class Request {
 		return url;
 	}
 	
-	abstract Response send() throws IOException;
+	protected abstract Response send() throws IOException, SecurityException;
 }

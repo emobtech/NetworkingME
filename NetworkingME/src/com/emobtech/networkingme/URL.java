@@ -24,6 +24,8 @@ package com.emobtech.networkingme;
 
 import java.util.Hashtable;
 
+import com.emobtech.networkingme.util.Util;
+
 //scheme://domain:port/path?query_string#fragment_id
 
 public final class URL {
@@ -43,11 +45,11 @@ public final class URL {
 		this.url = url;
 	}
 	
-	URL(URL baseURL, String path) {
+	public URL(URL baseURL, String path) {
 		this(baseURL.url + Util.formatPath(path));
 	}
 	
-	URL(URL baseURL, String path, Hashtable parameters) {
+	public URL(URL baseURL, String path, Hashtable parameters) {
 		this(
 			baseURL.url + 
 			Util.formatPath(path) + 

@@ -20,13 +20,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emobtech.networkingme;
+package com.emobtech.networkingme.http;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public final class MultipartBody implements Body {
+import com.emobtech.networkingme.Payload;
+import com.emobtech.networkingme.util.Util;
+
+public final class MultipartBody implements Payload {
 	
 	private ByteArrayOutputStream body = new ByteArrayOutputStream(1024);
 

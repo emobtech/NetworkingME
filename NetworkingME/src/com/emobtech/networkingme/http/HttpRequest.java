@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emobtech.networkingme;
+package com.emobtech.networkingme.http;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,6 +29,12 @@ import java.util.Hashtable;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.HttpConnection;
+
+import com.emobtech.networkingme.Payload;
+import com.emobtech.networkingme.Request;
+import com.emobtech.networkingme.Response;
+import com.emobtech.networkingme.URL;
+import com.emobtech.networkingme.util.Util;
 
 public final class HttpRequest extends Request {
 	
@@ -80,17 +86,10 @@ public final class HttpRequest extends Request {
 
 	private String method;
 	private Hashtable header;
-	private Body body;
+	private Payload body;
 
 	public HttpRequest(URL url) {
 		this(url, Method.GET);
-	}
-	
-	HttpRequest(URL url, HttpRequest mirrorRequest) {
-		this(url, mirrorRequest.method);
-		//
-		this.header = mirrorRequest.header;
-		this.body = mirrorRequest.body;
 	}
 
 	public HttpRequest(URL url, String method) {
@@ -99,6 +98,10 @@ public final class HttpRequest extends Request {
 		checkMethod(method);
 		//
 		this.method = method;
+	}
+	
+	public String getMethod() {
+		return method;
 	}
 	
 	public void setHeader(String key, String value) {
@@ -136,7 +139,11 @@ public final class HttpRequest extends Request {
 		setHeader(Header.COOKIE, cookieValue);
 	}
 	
-	public void setBody(Body body) {
+	public Payload getBody() {
+		return body;
+	}
+
+	public void setBody(Payload body) {
 		if (!Method.POST.equals(method)) {
 			throw new IllegalStateException("Request's method must be POST!");
 		}
@@ -144,7 +151,7 @@ public final class HttpRequest extends Request {
 		this.body = body;
 	}
 	
-	Response send() throws IOException {
+	protected Response send() throws IOException {
 		final String url = getURL().toEncodedString();
 		//
 		HttpConnection conn =

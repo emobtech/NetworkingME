@@ -20,11 +20,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emobtech.networkingme;
+package com.emobtech.networkingme.http;
 
 import java.util.Hashtable;
 
-public final class WebFormBody implements Body {
+import com.emobtech.networkingme.Payload;
+import com.emobtech.networkingme.util.Util;
+
+public final class WebFormBody implements Payload {
 	
 	private StringBuffer fieldsStr = new StringBuffer();
 	private byte[] body;
@@ -32,7 +35,7 @@ public final class WebFormBody implements Body {
 	public WebFormBody() {
 	}
 
-	WebFormBody(Hashtable fields) {
+	public WebFormBody(Hashtable fields) {
 		fieldsStr.append(Util.toQueryString(fields));
 	}
 	
