@@ -27,11 +27,11 @@ import javax.microedition.lcdui.Font;
 import javax.microedition.lcdui.Graphics;
 import javax.microedition.lcdui.Image;
 
-import com.emobtech.networkingme.HttpRequest;
 import com.emobtech.networkingme.Request;
 import com.emobtech.networkingme.RequestException;
 import com.emobtech.networkingme.RequestOperation;
 import com.emobtech.networkingme.URL;
+import com.emobtech.networkingme.http.HttpRequest;
 
 /**
  * This class implements a Custom Item that loads and displays an image from an
@@ -101,7 +101,39 @@ public final class URLImageItem extends CustomItem {
 		//
 		setLayout(layout);
 	}
-	
+
+	/**
+	 * Get the image's URL.
+	 * @return URL.
+	 */
+	public URL getUrl() {
+		return url;
+	}
+
+	/**
+	 * Get the placeholder.
+	 * @return Placeholder.
+	 */
+	public Image getPlaceholder() {
+		return placeholder;
+	}
+
+	/**
+	 * Get the image.
+	 * @return Image.
+	 */
+	public Image getImage() {
+		return image;
+	}
+
+	/**
+	 * Get the alternate text.
+	 * @return Text.
+	 */
+	public String getAltText() {
+		return altText;
+	}
+
 	/**
 	 * @see javax.microedition.lcdui.CustomItem#showNotify()
 	 */

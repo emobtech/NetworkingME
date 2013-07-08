@@ -1,4 +1,4 @@
-/* Body.java
+/* Payload.java
  * 
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
@@ -22,7 +22,7 @@
  */
 package com.emobtech.networkingme;
 
-public interface Body {
+public interface Payload {
 	
 	public String getType();
 	

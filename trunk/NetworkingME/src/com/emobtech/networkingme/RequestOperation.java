@@ -34,7 +34,11 @@ public final class RequestOperation implements Runnable {
 	private Listener listener;
 	
 	public RequestOperation(Request request) {
-		setRequest(request);
+		if (request == null) {
+			throw new IllegalArgumentException("Request is null!");
+		}
+		//
+		this.request = request;
 	}
 	
 	public void perform(Listener listener) {
@@ -61,13 +65,5 @@ public final class RequestOperation implements Runnable {
 				listener.onFailure(request, new RequestException(e));
 			}
 		}
-	}
-	
-	void setRequest(Request request) {
-		if (request == null) {
-			throw new IllegalArgumentException("Request is null!");
-		}
-		//
-		this.request = request;
 	}
 }

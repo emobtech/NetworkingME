@@ -20,14 +20,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emobtech.networkingme;
+package com.emobtech.networkingme.http;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import com.emobtech.networkingme.HttpRequest.Header;
+import com.emobtech.networkingme.Payload;
+import com.emobtech.networkingme.Request;
+import com.emobtech.networkingme.RequestException;
+import com.emobtech.networkingme.RequestOperation;
 import com.emobtech.networkingme.RequestOperation.Listener;
+import com.emobtech.networkingme.Response;
+import com.emobtech.networkingme.URL;
+import com.emobtech.networkingme.http.HttpRequest.Header;
+import com.emobtech.networkingme.util.Util;
 
 public final class HttpClient {
 	
@@ -141,7 +148,7 @@ public final class HttpClient {
 		post(path, body, listener);
 	}
 
-	public void post(String path, Body body, Listener listener) {
+	public void post(String path, Payload body, Listener listener) {
 		checkPath(path);
 		//
 		HttpRequest req =
@@ -166,22 +173,22 @@ public final class HttpClient {
 			listener);
 	}
 
-	public void perform(final HttpRequest request, final Listener listener) {
+	private void perform(final HttpRequest request, final Listener listener) {
 		writeHeader(request);
 		writeCookies(request);
 		//
-		final RequestOperation operation = new RequestOperation(request);
-		//
-		operation.perform(new RequestOperation.Listener() {
+		new RequestOperation(request).perform(new RequestOperation.Listener() {
 			public void onSuccess(Request request, Response response) {
 				HttpResponse res = (HttpResponse)response;
 				//
 				if (res.wasRedirected() && handleRedirect) {
 					HttpRequest req = (HttpRequest)request;
-					URL redirectURL = res.getRedirectURL();
 					//
-					operation.setRequest(new HttpRequest(redirectURL, req));
-					operation.perform(this);
+					HttpRequest newRequest =
+						new HttpRequest(res.getRedirectURL(), req.getMethod());
+					newRequest.setBody(req.getBody());
+					//
+					perform(newRequest, listener);
 				} else {
 					if (listener != null) {
 						listener.onSuccess(request, response);

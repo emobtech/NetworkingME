@@ -20,7 +20,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.emobtech.networkingme;
+package com.emobtech.networkingme.http;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,6 +28,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
 import javax.microedition.io.HttpConnection;
+
+import com.emobtech.networkingme.Response;
+import com.emobtech.networkingme.URL;
+import com.emobtech.networkingme.util.Util;
 
 public final class HttpResponse extends Response {
 	
