@@ -22,7 +22,6 @@
  */
 package com.emobtech.networkingme;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
 public final class WebFormBody implements Body {
@@ -71,11 +70,7 @@ public final class WebFormBody implements Body {
 
 	private void process() {
 		if (body == null) {
-			try {
-				body = fieldsStr.toString().getBytes(Util.UTF8);
-			} catch (UnsupportedEncodingException e) {
-				body = fieldsStr.toString().getBytes();
-			}
+			body = Util.toBytesString(fieldsStr.toString());
 		}
 	}
 }
