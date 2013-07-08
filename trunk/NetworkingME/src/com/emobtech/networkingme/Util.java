@@ -343,6 +343,18 @@ final class Util {
 		return isEmptyString(value) ? defaultValue : value;
 	}
 	
+	public static byte[] toBytesString(String str) {
+		if (isEmptyString(str)) {
+			return new byte[0];
+		}
+		//
+		try {
+			return str.getBytes(UTF8);
+		} catch (UnsupportedEncodingException e) {
+			return str.getBytes();
+		}
+	}
+	
 	/**
 	 * <p>
 	 * Private constructor to avoid object instantiation.

@@ -75,6 +75,7 @@ public final class HttpRequest extends Request {
 		String LOCATION = "Location";
 		String SET_COOKIE = "Set-Cookie";
 		String USER_AGENT = "User-Agent";
+		String CONTENT_DISPOSITION = "Content-Disposition";
 	}
 
 	private String method;
