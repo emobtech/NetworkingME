@@ -1,4 +1,4 @@
-/* RequestOperation.java
+/* BinaryListener.java
  * 
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
@@ -22,52 +22,13 @@
  */
 package com.emobtech.networkingme;
 
-public final class RequestOperation implements Runnable {
+public abstract class BinaryListener implements RequestOperation.Listener {
 	
-	public static interface Listener {
-		void onSuccess(Request request, Response response);
-		void onComplete(Request request, Response response);
-		void onFailure(Request request, RequestException exception);
-	}
-
-	private Request request;
-	private Listener listener;
+	public abstract void onBinary(byte[] data);
 	
-	public RequestOperation(Request request) {
-		setRequest(request);
+	public final void onSuccess(Request request, Response response) {
+		onBinary(response.getBytes());
 	}
 	
-	public void perform(Listener listener) {
-		this.listener = listener;
-		//
-		ThreadDispatcher.getInstance().dispatch(this);
-	}
-
-	public void run() {
-		try {
-			Response response = request.send();
-			//
-			if (listener != null) {
-				listener.onComplete(request, response);
-				//
-				if (response.wasSuccessfull()) {
-					listener.onSuccess(request, response);
-				} else {
-					listener.onFailure(request, new RequestException(response));
-				}
-			}
-		} catch (Exception e) {
-			if (listener != null) {
-				listener.onFailure(request, new RequestException(e));
-			}
-		}
-	}
-	
-	void setRequest(Request request) {
-		if (request == null) {
-			throw new IllegalArgumentException("Request is null!");
-		}
-		//
-		this.request = request;
-	}
+	public final void onComplete(Request request, Response response) {}
 }

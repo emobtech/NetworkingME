@@ -113,7 +113,11 @@ public final class HttpRequest extends Request {
 		String headerValue = (String)header.get(key);
 		//
 		if (headerValue != null) {
-			headerValue += ',' + value;
+			if (Header.COOKIE.toLowerCase().equals(key.toLowerCase())) {
+				headerValue += ';' + value;
+			} else {
+				headerValue += ',' + value;
+			}
 		} else {
 			headerValue = value;
 		}

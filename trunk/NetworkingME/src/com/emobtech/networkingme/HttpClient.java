@@ -26,6 +26,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import com.emobtech.networkingme.HttpRequest.Header;
 import com.emobtech.networkingme.RequestOperation.Listener;
 
 public final class HttpClient {
@@ -78,7 +79,11 @@ public final class HttpClient {
 		String headerValue = (String)header.get(key);
 		//
 		if (headerValue != null) {
-			headerValue += ',' + value;
+			if (Header.COOKIE.toLowerCase().equals(key.toLowerCase())) {
+				headerValue += ';' + value;
+			} else {
+				headerValue += ',' + value;
+			}
 		} else {
 			headerValue = value;
 		}
@@ -124,6 +129,18 @@ public final class HttpClient {
 		perform(new HttpRequest(new URL(baseURL, path, parameters)), listener);
 	}
 	
+	public void postForm(String path, Hashtable parameters, Listener listener) {
+		post(path, new WebFormBody(parameters), listener);
+	}
+	
+	public void postFile(String path, String name, String filename, 
+		String contentType, byte[] data, Listener listener) {
+		MultipartBody body = new MultipartBody();
+		body.addPart(name, filename, contentType, data);
+		//
+		post(path, body, listener);
+	}
+
 	public void post(String path, Body body, Listener listener) {
 		checkPath(path);
 		//
@@ -133,10 +150,6 @@ public final class HttpClient {
 		req.setBody(body);
 		//
 		perform(req, listener);
-	}
-
-	public void postForm(String path, Hashtable parameters, Listener listener) {
-		post(path, new WebFormBody(parameters), listener);
 	}
 
 	public void head(String path, Listener listener) {
