@@ -34,7 +34,7 @@ public final class MultipartBody implements Payload {
 	private ByteArrayOutputStream body = new ByteArrayOutputStream(1024);
 
 	public String getType() {
-		return "multipart/form-data, boundary=" + getBoundary();
+		return "multipart/form-data; boundary=" + getBoundary();
 	}
 
 	public long getLength() {
@@ -50,19 +50,12 @@ public final class MultipartBody implements Payload {
 			throw new IllegalArgumentException("Name/Value null or empty!");
 		}
 		//
-		StringBuffer header = new StringBuffer();
-		//
-		header.append(getBoundary());
-		header.append('\n');
-		header.append(HttpRequest.Header.CONTENT_DISPOSITION);
-		header.append(": form-data; ");
-		header.append("name=");
-		header.append("\"" + Util.encodeStringURL(name) + "\"");
-		header.append("\n\n");
-		header.append(Util.encodeStringURL(value));
+		final String header = createHeader(name, null, null);
 		//
 		try {
-			body.write(Util.toBytesString(header.toString()));
+			body.write(Util.toBytesString(header));
+			body.write(Util.toBytesString(value));
+			body.write(Util.toBytesString("\n--" + getBoundary() + "--"));
 		} catch (IOException e) {
 			throw new IllegalStateException("Error by writing part!");
 		}
@@ -78,24 +71,12 @@ public final class MultipartBody implements Payload {
 			throw new IllegalArgumentException(
 				"Name/Filename/Content Type/Data null or empty!");
 		}
-		//
-		StringBuffer header = new StringBuffer();
-		//
-		header.append(getBoundary());
-		header.append('\n');
-		header.append(HttpRequest.Header.CONTENT_DISPOSITION);
-		header.append(": form-data; ");
-		header.append("name=");
-		header.append("\"" + Util.encodeStringURL(name) + "\"; ");
-		header.append("filename=");
-		header.append("\"" + Util.encodeStringURL(filename) + "\"\n");
-		header.append(HttpRequest.Header.CONTENT_TYPE);
-		header.append(": " + contentType + '\n');
-		header.append("\n\n");
+		final String header = createHeader(name, filename, contentType);
 		//
 		try {
 			body.write(Util.toBytesString(header.toString()));
 			body.write(data);
+			body.write(Util.toBytesString("\n--" + getBoundary() + "--"));
 		} catch (IOException e) {
 			throw new IllegalStateException("Error by writing part!");
 		}
@@ -107,6 +88,27 @@ public final class MultipartBody implements Payload {
 	}
 
 	private String getBoundary() {
-		return "-----" + String.valueOf(hashCode());
+		return "----------NetworkingMEBoundary_" + String.valueOf(hashCode());
+	}
+	
+	private String createHeader(String name, String filename, String contentType) {
+		StringBuffer header = new StringBuffer();
+		//
+		header.append('\n');
+		header.append("--" + getBoundary());
+		header.append('\n');
+		header.append(HttpRequest.Header.CONTENT_DISPOSITION + ": form-data; ");
+		header.append("name=\"" + name + '\"');
+		if (filename != null) {
+			header.append("; filename=\"" + filename + "\"");
+		}
+		header.append('\n');
+		if (contentType != null) {
+			header.append(HttpRequest.Header.CONTENT_TYPE + ": " + contentType);
+			header.append('\n');
+		}
+		header.append('\n');
+		//
+		return header.toString();
 	}
 }

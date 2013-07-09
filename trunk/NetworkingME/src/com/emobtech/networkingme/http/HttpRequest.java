@@ -84,6 +84,7 @@ public final class HttpRequest extends Request {
 		String CONTENT_DISPOSITION = "Content-Disposition";
 	}
 
+	private URL url;
 	private String method;
 	private Hashtable header;
 	private Payload body;
@@ -93,11 +94,21 @@ public final class HttpRequest extends Request {
 	}
 
 	public HttpRequest(URL url, String method) {
-		super(url);
+		if (url == null) {
+			throw new IllegalArgumentException("URL null!");
+		}
+		if (Util.isEmptyString(method)) {
+			throw new IllegalArgumentException("Method null or empty!");
+		}
 		//
 		checkMethod(method);
 		//
+		this.url = url;
 		this.method = method;
+	}
+	
+	public URL getURL() {
+		return url;
 	}
 	
 	public String getMethod() {
@@ -155,7 +166,7 @@ public final class HttpRequest extends Request {
 		final String url = getURL().toEncodedString();
 		//
 		HttpConnection conn =
-			(HttpConnection)Connector.open(url, Connector.READ_WRITE);
+			(HttpConnection)Connector.open(url, Connector.READ_WRITE, true);
 		//
 		conn.setRequestMethod(method);
 		//
@@ -193,7 +204,7 @@ public final class HttpRequest extends Request {
 			OutputStream out = conn.openDataOutputStream();
 			//
 			try {
-				out.write(body.getBytes());
+				Util.writeBytes(body.getBytes(), out);
 			} finally {
 				out.close();
 			}
