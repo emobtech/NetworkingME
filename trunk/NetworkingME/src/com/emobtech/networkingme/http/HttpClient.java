@@ -186,7 +186,9 @@ public final class HttpClient {
 					//
 					HttpRequest newRequest =
 						new HttpRequest(res.getRedirectURL(), req.getMethod());
-					newRequest.setBody(req.getBody());
+					if (req.getBody() != null) {
+						newRequest.setBody(req.getBody());
+					}
 					//
 					perform(newRequest, listener);
 				} else {
