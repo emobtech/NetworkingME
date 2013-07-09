@@ -126,6 +126,12 @@ public final class HttpClient {
 		}
 	}
 	
+	public void clearCookies() {
+		if (cookies != null) {
+			cookies.removeAllElements();
+		}
+	}
+	
 	public void get(String path, Listener listener) {
 		get(path, null, listener);
 	}
@@ -186,9 +192,7 @@ public final class HttpClient {
 					//
 					HttpRequest newRequest =
 						new HttpRequest(res.getRedirectURL(), req.getMethod());
-					if (req.getBody() != null) {
-						newRequest.setBody(req.getBody());
-					}
+					newRequest.setBody(req.getBody());
 					//
 					perform(newRequest, listener);
 				} else {

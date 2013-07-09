@@ -127,15 +127,18 @@ public final class HttpResponse extends Response {
 			key = conn.getHeaderFieldKey(i);
 			//
 			if (key != null) {
+				key = key.toLowerCase();
 				value = (String)headers.get(key);
 				//
 				if (value != null) {
 					value += '|' + conn.getHeaderField(i);
+					System.out.println("value: " + value);
 				} else {
 					value = conn.getHeaderField(i);
+					System.out.println("value: " + value);
 				}
 				//
-				headers.put(key.toLowerCase(), value);
+				headers.put(key, value);
 			} else {
 				break;
 			}

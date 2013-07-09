@@ -27,7 +27,11 @@ public abstract class BinaryListener implements RequestOperation.Listener {
 	public abstract void onBinary(byte[] data);
 	
 	public final void onSuccess(Request request, Response response) {
-		onBinary(response.getBytes());
+		try {
+			onBinary(response.getBytes());
+		} catch (Exception e) {
+			onFailure(request, new RequestException(e));
+		}
 	}
 	
 	public final void onComplete(Request request, Response response) {}
