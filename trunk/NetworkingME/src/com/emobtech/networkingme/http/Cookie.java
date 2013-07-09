@@ -39,24 +39,23 @@ public final class Cookie {
 	}
 	
 	public String getName() {
-		String nameValue = cookie.substring(0, cookie.indexOf(';'));
-		//
-		return Util.splitString(nameValue, '=')[0];
+		return cookie.substring(0, cookie.indexOf('='));
 	}
 	
 	public String getValue() {
-		String nameValue = cookie.substring(0, cookie.indexOf(';'));
-		//
-		return Util.splitString(nameValue, '=')[1];
+		return cookie.substring(
+			cookie.indexOf('=') +1,
+			Util.indexOrLastOfString(cookie, ";", 0, true));
 	}
 	
 	public Date getExpiration() {
-		int expireIndex = cookie.indexOf("Expires=");
+		int expireIndex = Util.indexOfString(cookie, "Expires=", 0, false);
 		//
 		if (expireIndex != -1) {
 			String date =
 				cookie.substring(
-					expireIndex + 8, cookie.indexOf(';', expireIndex));
+					expireIndex + 8,
+					Util.indexOrLastOfString(cookie, ";", expireIndex, true));
 			//
 			return Util.parseCookieDate(date);
 		} else {
@@ -65,33 +64,35 @@ public final class Cookie {
 	}
 	
 	public String getPath() {
-		int pathIndex = cookie.indexOf("Path=");
+		int pathIndex = Util.indexOfString(cookie, "Path=", 0, false);
 		//
 		if (pathIndex != -1) {
 			return cookie.substring(
-				pathIndex + 5, cookie.indexOf(';', pathIndex)); 
+				pathIndex + 5,
+				Util.indexOrLastOfString(cookie, ";", pathIndex, true)); 
 		} else {
 			return null;
 		}
 	}
 	
 	public String getDomain() {
-		int domainIndex = cookie.indexOf("Domain=");
+		int domainIndex = Util.indexOfString(cookie, "Domain=", 0, false);
 		//
 		if (domainIndex != -1) {
 			return cookie.substring(
-				domainIndex + 7, cookie.indexOf(';', domainIndex)); 
+				domainIndex + 7,
+				Util.indexOrLastOfString(cookie, ";", domainIndex, true)); 
 		} else {
 			return null;
 		}
 	}
 	
 	public boolean isSecure() {
-		return cookie.indexOf("Secure") != -1;
+		return Util.indexOfString(cookie, "Secure", 0, false) != -1;
 	}
 	
 	public boolean isHttpOnly() {
-		return cookie.indexOf("HttpOnly") != -1;
+		return Util.indexOfString(cookie, "HttpOnly", 0, false) != -1;
 	}
 	
 	public boolean isExpired() {

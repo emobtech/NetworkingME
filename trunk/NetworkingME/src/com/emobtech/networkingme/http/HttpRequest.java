@@ -155,7 +155,7 @@ public final class HttpRequest extends Request {
 	}
 
 	public void setBody(Payload body) {
-		if (!Method.POST.equals(method)) {
+		if (body != null && !Method.POST.equals(method)) {
 			throw new IllegalStateException("Request's method must be POST!");
 		}
 		//

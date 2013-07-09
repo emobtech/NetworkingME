@@ -186,6 +186,8 @@ public final class Util {
 			return null;
 		}
 		//
+		date = replaceAllStrings(date, "-", " ");
+		//
 		String[] dateParts = splitString(date, ' ');
 		//
 		if (dateParts.length < 6) {
@@ -364,6 +366,53 @@ public final class Util {
 		} catch (UnsupportedEncodingException e) {
 			return str.getBytes();
 		}
+	}
+	
+	public static int indexOfString(String str, String search, int fromIndex, 
+		boolean sensitive) {
+		if (!sensitive) {
+			str = str.toLowerCase();
+			search = search.toLowerCase();
+		}
+		//
+		return str.indexOf(search, fromIndex);
+	}
+	
+	public static int indexOrLastOfString(String str, String search, 
+		int fromIndex, boolean sensitive) {
+		int index = indexOfString(str, search, fromIndex, sensitive);
+		//
+		return index != -1 ? index : str.length();
+	}
+	
+	public static final String replaceAllStrings(String str, String searchStr,
+		String replacementStr) {
+		if (isEmptyString(str)) {
+			throw new IllegalArgumentException("Str null or empty.");
+		}
+		if (isEmptyString(searchStr)) {
+			throw new IllegalArgumentException("SearchStr null or empty.");
+		}
+		if (isEmptyString(replacementStr)) {
+			throw new IllegalArgumentException("ReplacementStr null or empty.");
+		}
+		//
+		StringBuffer sb = new StringBuffer();
+		int searchStringPos = str.indexOf(searchStr);
+		int startPos = 0;
+		int searchStringLength = searchStr.length();
+		//
+		while (searchStringPos != -1) {
+			sb.append(
+				str.substring(startPos, searchStringPos)).append(
+					replacementStr);
+			startPos = searchStringPos + searchStringLength;
+			searchStringPos = str.indexOf(searchStr, startPos);
+		}
+		//
+		sb.append(str.substring(startPos, str.length()));
+		//
+		return sb.toString();
 	}
 	
 	/**

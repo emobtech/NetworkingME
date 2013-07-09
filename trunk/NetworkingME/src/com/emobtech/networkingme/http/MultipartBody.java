@@ -91,7 +91,8 @@ public final class MultipartBody implements Payload {
 		return "----------NetworkingMEBoundary_" + String.valueOf(hashCode());
 	}
 	
-	private String createHeader(String name, String filename, String contentType) {
+	private String createHeader(String name, String filename, 
+		String contentType) {
 		StringBuffer header = new StringBuffer();
 		//
 		header.append('\n');

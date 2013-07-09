@@ -27,7 +27,11 @@ public abstract class TextListener implements RequestOperation.Listener {
 	public abstract void onText(String text);
 	
 	public final void onSuccess(Request request, Response response) {
-		onText(response.getString());
+		try {
+			onText(response.getString());
+		} catch (Exception e) {
+			onFailure(request, new RequestException(e));
+		}
 	}
 	
 	public final void onComplete(Request request, Response response) {}
