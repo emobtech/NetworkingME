@@ -385,7 +385,7 @@ public final class Util {
 		return index != -1 ? index : str.length();
 	}
 	
-	public static final String replaceAllStrings(String str, String searchStr,
+	public static String replaceAllStrings(String str, String searchStr,
 		String replacementStr) {
 		if (str == null) {
 			throw new IllegalArgumentException("Str null!");
