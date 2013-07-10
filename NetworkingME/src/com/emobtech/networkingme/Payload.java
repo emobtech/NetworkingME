@@ -1,5 +1,6 @@
 /* Payload.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,11 +23,47 @@
  */
 package com.emobtech.networkingme;
 
+import com.emobtech.networkingme.http.MultipartBody;
+import com.emobtech.networkingme.http.WebFormBody;
+
+/**
+ * <p>
+ * This class represents a payload.
+ * </p>
+ * <p>
+ * Reference: <br />
+ * <a href="http://en.wikipedia.org/wiki/Payload_(computing)" target="_blank">
+ *     http://en.wikipedia.org/wiki/Payload_(computing)
+ * </a>
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ * @see WebFormBody
+ * @see MultipartBody
+ */
 public interface Payload {
+	/**
+	 * <p>
+	 * Returns the type.
+	 * </p>
+	 * @return Type.
+	 */
+	String getType();
 	
-	public String getType();
+	/**
+	 * <p>
+	 * Returns the length.
+	 * </p>
+	 * @return Length.
+	 */
+	long getLength();
 	
-	public long getLength();
-	
-	public byte[] getBytes();
+	/**
+	 * <p>
+	 * Returns the data.
+	 * </p>
+	 * @return Data.
+	 */
+	byte[] getBytes();
 }

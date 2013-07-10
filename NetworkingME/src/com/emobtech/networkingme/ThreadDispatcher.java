@@ -1,5 +1,6 @@
 /* ThreadDispatcher.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,12 +25,42 @@ package com.emobtech.networkingme;
 
 import java.util.Vector;
 
+/**
+ * <p>
+ * This class implements a thread pool used to run runnable objects.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 final class ThreadDispatcher implements Runnable {
-
+	/**
+	 * <p>
+	 * Singleton instance.
+	 * </p>
+	 */
 	private static ThreadDispatcher singleton;
+
+	/**
+	 * <p>
+	 * Queue.
+	 * </p>
+	 */
 	private Vector queue;
+	
+	/**
+	 * <p>
+	 * Thread.
+	 * </p>
+	 */
 	private Thread thread;
 
+	/**
+	 * <p>
+	 * Returns the ThreadDispatcher singleton instance.
+	 * </p>
+	 * @return Single instance.
+	 */
 	public synchronized static ThreadDispatcher getInstance() {
 		if (singleton == null) {
 			singleton = new ThreadDispatcher();
@@ -38,6 +69,12 @@ final class ThreadDispatcher implements Runnable {
 		return singleton;
 	}
 	
+	/**
+	 * <p>
+	 * Adds a runnable object into the queue to be ran.
+	 * </p>
+	 * @param runnable Object.
+	 */
 	public void dispatch(Runnable runnable) {
 		synchronized (queue) {
 			queue.addElement(runnable);
@@ -45,6 +82,9 @@ final class ThreadDispatcher implements Runnable {
 		}
 	}
 	
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
 	public void run() {
 		try {
 			Runnable process = null;
@@ -69,6 +109,11 @@ final class ThreadDispatcher implements Runnable {
         }		
 	}
 	
+	/**
+	 * <p>
+	 * Private constructor to avoid object instantiation.
+	 * </p>
+	 */
 	private ThreadDispatcher() {
 		queue = new Vector(5);
 		thread = new Thread(this);

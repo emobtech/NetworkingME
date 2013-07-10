@@ -1,5 +1,6 @@
 /* Response.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,17 +23,63 @@
  */
 package com.emobtech.networkingme;
 
+import com.emobtech.networkingme.http.HttpResponse;
+
+/**
+ * <p>
+ * This class represents a response from a request.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ * @see HttpResponse
+ */
 public abstract class Response {
+	/**
+	 * <p>
+	 * Returns whether the request was concluded successfully.
+	 * </p>
+	 * @return Success (true).
+	 */
+	public abstract boolean wasSuccessful();
 	
-	public abstract boolean wasSuccessfull();
-	
+	/**
+	 * <p>
+	 * Returns the response code.
+	 * </p>
+	 * @return Code.
+	 */
 	public abstract int getCode();
 	
+	/**
+	 * <p>
+	 * Returns the content as bytes.
+	 * </p>
+	 * @return Content as bytes.
+	 */
 	public abstract byte[] getBytes();
 	
+	/**
+	 * <p>
+	 * Returns the content as string.
+	 * </p>
+	 * @return Content as string.
+	 */
 	public abstract String getString();
 	
+	/**
+	 * <p>
+	 * Returns the content length.
+	 * </p>
+	 * @return Length.
+	 */
 	public abstract long getLength();
 	
+	/**
+	 * <p>
+	 * Returns the content type.
+	 * </p>
+	 * @return Type.
+	 */
 	public abstract String getType();
 }

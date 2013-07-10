@@ -1,5 +1,6 @@
 /* URL.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,17 +27,63 @@ import java.util.Hashtable;
 
 import com.emobtech.networkingme.util.Util;
 
-//scheme://domain:port/path?query_string#fragment_id
-
+/**
+ * <p>
+ * This class represents an URL - Uniform Resoure Locator.
+ * </p>
+ * <p>
+ * Reference: <br />
+ * <a href="http://en.wikipedia.org/wiki/Uniform_resource_locator" target="_blank">
+ *     http://en.wikipedia.org/wiki/Uniform_resource_locator
+ * </a>
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public final class URL {
-	
+	/**
+	 * <p>
+	 * HTTP prefix.
+	 * </p>
+	 */
 	private static final String HTTP_SCHEME = "http";
+
+	/**
+	 * <p>
+	 * HTTP default port.
+	 * </p>
+	 */
 	private static final int HTTP_PORT = 80;
+
+	/**
+	 * <p>
+	 * HTTPS prefix.
+	 * </p>
+	 */
 	private static final String HTTPS_SCHEME = "https";
+
+	/**
+	 * <p>
+	 * HTTPS default port.
+	 * </p>
+	 */
 	private static final int HTTPS_PORT = 443;
 	
+	/**
+	 * <p>
+	 * URL string.
+	 * </p>
+	 */
 	private String url;
 	
+	/**
+	 * <p>
+	 * Creates a new URL with a given string, e.g. "http://www.emobtech.com".
+	 * </p>
+	 * @param url URL.
+	 * @throws IllegalArgumentException URL null or empty!
+	 */
 	public URL(String url) {
 		if (Util.isEmptyString(url)) {
 			throw new IllegalArgumentException("URL null or empty!");
@@ -45,10 +92,32 @@ public final class URL {
 		this.url = url;
 	}
 	
+	/**
+	 * <p>
+	 * Creates a new URL with a given base and path, e.g. 
+	 * "http://www.emobtech.com" and "/page.html".
+	 * </p>
+	 * <p>
+	 * The result URL is "http://www.emobtech.com/page.html".
+	 * </p>
+	 * @param url URL.
+	 * @throws IllegalArgumentException URL null or empty!
+	 */
 	public URL(URL baseURL, String path) {
 		this(baseURL.url + Util.formatPath(path));
 	}
 	
+	/**
+	 * <p>
+	 * Creates a new URL with a given base, path and parameters, e.g. 
+	 * "http://www.emobtech.com", "/page.html" and "parameter=value".
+	 * </p>
+	 * <p>
+	 * The result URL is "http://www.emobtech.com/page.html?parameter=value".
+	 * </p>
+	 * @param url URL.
+	 * @throws IllegalArgumentException URL null or empty!
+	 */
 	public URL(URL baseURL, String path, Hashtable parameters) {
 		this(
 			baseURL.url + 
@@ -56,10 +125,28 @@ public final class URL {
 			Util.formatQueryString(Util.toQueryString(parameters)));
 	}
 		
+	/**
+	 * <p>
+	 * Returns the scheme.
+	 * </p>
+	 * <p>
+	 * e.g., "http" from "http://www.emobtech.com".
+	 * </p>
+	 * @return Scheme.
+	 */
 	public String getScheme() {
 		return url.substring(0, url.indexOf("://"));
 	}
 
+	/**
+	 * <p>
+	 * Returns the domain.
+	 * </p>
+	 * <p>
+	 * e.g., "www.emobtech.com" from "http://www.emobtech.com".
+	 * </p>
+	 * @return Domain.
+	 */
 	public String getDomain() {
 		int endSchemeIndex = url.indexOf("://") +3;
 		int portIndex = url.indexOf(":", endSchemeIndex);
@@ -74,6 +161,19 @@ public final class URL {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Returns the port.
+	 * </p>
+	 * <p>
+	 * e.g., 8080 from "http://www.emobtech.com:8080".
+	 * </p>
+	 * <p>
+	 * In the absence of a specified port, -1 is returned. In case of HTTP and 
+	 * HTTPS schemes, their default port, 80 and 403, are returned.
+	 * </p>
+	 * @return Port.
+	 */
 	public int getPort() {
 		String port = null;
 		//
@@ -105,6 +205,15 @@ public final class URL {
 		return Integer.parseInt(port);
 	}
 
+	/**
+	 * <p>
+	 * Returns the path.
+	 * </p>
+	 * <p>
+	 * e.g., "/page.html" from "http://www.emobtech.com/page.html".
+	 * </p>
+	 * @return Path.
+	 */
 	public String getPath() {
 		int endSchemeIndex = url.indexOf("://") +3;
 		int pathIndex = url.indexOf("/", endSchemeIndex);
@@ -122,6 +231,15 @@ public final class URL {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Returns the query string.
+	 * </p>
+	 * <p>
+	 * e.g., "parameter=value" from "http://www.emobtech.com?parameter=value".
+	 * </p>
+	 * @return Query string.
+	 */
 	public String getQueryString() {
 		int queryStringIndex = url.indexOf("?");
 		//
@@ -138,6 +256,15 @@ public final class URL {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Returns the fragment.
+	 * </p>
+	 * <p>
+	 * e.g., "fragment" from "http://www.emobtech.com#fragment".
+	 * </p>
+	 * @return Fragment.
+	 */
 	public String getFragment() {
 		final int fragmentIndex = url.indexOf("#");
 		//
@@ -176,6 +303,13 @@ public final class URL {
 		return url;
 	}
 	
+	/**
+	 * <p>
+	 * Return an encoded URL as string, e.g., 
+	 * "http://www.emobtech.com?parameter=value%20otherValue"
+	 * </p>
+	 * @return Encoded URL.
+	 */
 	public String toEncodedString() {
 		StringBuffer encodedUrl = new StringBuffer();
 		//
@@ -211,17 +345,5 @@ public final class URL {
 		}
 		//
 		return encodedUrl.toString();
-	}
-	
-	public static void main(String[] args) {
-		URL url = new URL("http://www.emobtech.com:7777/page/path.html?param=val ue&param2=val ue2#fragment");
-		//
-		System.out.println("scheme: " + url.getScheme());
-		System.out.println("domain: " + url.getDomain());
-		System.out.println("port: " + url.getPort());
-		System.out.println("path: " + url.getPath());
-		System.out.println("queryString: " + url.getQueryString());
-		System.out.println("fragment: " + url.getFragment());
-		System.out.println("encodedString: " + url.toEncodedString());
 	}
 }

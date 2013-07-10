@@ -139,7 +139,7 @@ public final class HttpClient {
 	public void get(String path, Hashtable parameters, Listener listener) {
 		checkPath(path);
 		//
-		perform(new HttpRequest(new URL(baseURL, path, parameters)), listener);
+		start(new HttpRequest(new URL(baseURL, path, parameters)), listener);
 	}
 	
 	public void postForm(String path, Hashtable parameters, Listener listener) {
@@ -162,7 +162,7 @@ public final class HttpClient {
 		//
 		req.setBody(body);
 		//
-		perform(req, listener);
+		start(req, listener);
 	}
 
 	public void head(String path, Listener listener) {
@@ -172,18 +172,18 @@ public final class HttpClient {
 	public void head(String path, Hashtable parameters, Listener listener) {
 		checkPath(path);
 		//
-		perform(
+		start(
 			new HttpRequest(
 				new URL(baseURL, path, parameters),
 				HttpRequest.Method.HEAD),
 			listener);
 	}
 
-	private void perform(final HttpRequest request, final Listener listener) {
+	private void start(final HttpRequest request, final Listener listener) {
 		writeHeader(request);
 		writeCookies(request);
 		//
-		new RequestOperation(request).perform(new RequestOperation.Listener() {
+		new RequestOperation(request).start(new RequestOperation.Listener() {
 			public void onSuccess(Request request, Response response) {
 				HttpResponse res = (HttpResponse)response;
 				//
@@ -194,7 +194,7 @@ public final class HttpClient {
 						new HttpRequest(res.getRedirectURL(), req.getMethod());
 					newRequest.setBody(req.getBody());
 					//
-					perform(newRequest, listener);
+					start(newRequest, listener);
 				} else {
 					if (listener != null) {
 						listener.onSuccess(request, response);

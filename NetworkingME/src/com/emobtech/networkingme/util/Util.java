@@ -123,6 +123,10 @@ public final class Util {
 			encodedQueryString.append(encodeStringURL(paramValue[0]));
 			encodedQueryString.append('=');
 			encodedQueryString.append(encodeStringURL(paramValue[1]));
+			//
+			if (i +1 < params.length) {
+				encodedQueryString.append('&');
+			}
 		}
 		//
 		return encodedQueryString.toString();

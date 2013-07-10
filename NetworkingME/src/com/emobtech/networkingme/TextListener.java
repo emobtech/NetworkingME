@@ -1,5 +1,6 @@
 /* TextListener.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,10 +23,27 @@
  */
 package com.emobtech.networkingme;
 
+/**
+ * <p>
+ * This class represents a listener to request events, which provide a utility 
+ * method to obtain the text content easily, result of a successful response.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public abstract class TextListener implements RequestOperation.Listener {
-	
+	/**
+	 * <p>
+	 * Called when the request is concluded successfully.
+	 * </p>
+	 * @param text Response content as string.
+	 */
 	public abstract void onText(String text);
 	
+	/**
+	 * @see com.emobtech.networkingme.RequestOperation.Listener#onSuccess(com.emobtech.networkingme.Request, com.emobtech.networkingme.Response)
+	 */
 	public final void onSuccess(Request request, Response response) {
 		try {
 			onText(response.getString());
@@ -34,5 +52,8 @@ public abstract class TextListener implements RequestOperation.Listener {
 		}
 	}
 	
+	/**
+	 * @see com.emobtech.networkingme.RequestOperation.Listener#onComplete(com.emobtech.networkingme.Request, com.emobtech.networkingme.Response)
+	 */
 	public final void onComplete(Request request, Response response) {}
 }

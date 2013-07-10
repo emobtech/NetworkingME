@@ -1,5 +1,6 @@
 /* Request.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,11 +25,26 @@ package com.emobtech.networkingme;
 
 import java.io.IOException;
 
+import com.emobtech.networkingme.http.HttpRequest;
+
+/**
+ * <p>
+ * This class represents a request.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ * @see HttpRequest
+ * @see RequestOperation
+ */
 public abstract class Request {
 	/**
-	 * @return
-	 * @throws IOException
-	 * @throws SecurityException
+	 * <p>
+	 * Sends the request.
+	 * </p>
+	 * @return Response.
+	 * @throws IOException If any I/O error occurs.
+	 * @throws SecurityException If any security violation occurs.
 	 */
 	protected abstract Response send() throws IOException, SecurityException;
 }
