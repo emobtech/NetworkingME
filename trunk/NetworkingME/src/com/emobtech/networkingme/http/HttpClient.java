@@ -1,5 +1,6 @@
 /* HttpClient.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -85,7 +86,7 @@ public final class HttpClient {
 		//
 		String headerValue = (String)header.get(key);
 		//
-		if (headerValue != null) {
+		if (headerValue != null && !headerValue.equals(value)) {
 			if (Header.COOKIE.toLowerCase().equals(key.toLowerCase())) {
 				headerValue += ';' + value;
 			} else {

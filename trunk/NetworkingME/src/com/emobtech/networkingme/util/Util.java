@@ -1,5 +1,6 @@
 /* Util.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -369,6 +370,18 @@ public final class Util {
 			return str.getBytes(UTF8);
 		} catch (UnsupportedEncodingException e) {
 			return str.getBytes();
+		}
+	}
+	
+	public static String toStringBytes(byte[] bytes) {
+		if (bytes == null || bytes.length == 0) {
+			return "";
+		}
+		//
+		try {
+			return new String(bytes, UTF8);
+		} catch (UnsupportedEncodingException e) {
+			return new String(bytes);
 		}
 	}
 	
