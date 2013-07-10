@@ -1,5 +1,6 @@
 /* Cookie.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,10 +27,35 @@ import java.util.Date;
 
 import com.emobtech.networkingme.util.Util;
 
+/**
+ * <p>
+ * This class represents a HTTP cookie.
+ * </p>
+ * <p>
+ * Reference: <br />
+ * <a href="https://en.wikipedia.org/wiki/HTTP_cookie" target="_blank">
+ *     https://en.wikipedia.org/wiki/HTTP_cookie
+ * </a>
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public final class Cookie {
-	
+	/**
+	 * <p>
+	 * Cookie string.
+	 * </p>
+	 */
 	private String cookie;
 	
+	/**
+	 * <p>
+	 * Creates a Cookie from given string.
+	 * </p>
+	 * @param cookie Cookie.
+	 * @throws IllegalArgumentException Cookie null, empty or invalid!
+	 */
 	public Cookie(String cookie) {
 		if (Util.isEmptyString(cookie)) {
 			throw new IllegalArgumentException("Cookie null or empty!");
@@ -45,16 +71,34 @@ public final class Cookie {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Returns the name.
+	 * </p>
+	 * @return Name.
+	 */
 	public String getName() {
 		return cookie.substring(0, cookie.indexOf('='));
 	}
 	
+	/**
+	 * <p>
+	 * Returns the value.
+	 * </p>
+	 * @return Value.
+	 */
 	public String getValue() {
 		return cookie.substring(
 			cookie.indexOf('=') +1,
 			Util.indexOrLastOfString(cookie, ";", 0, true));
 	}
 	
+	/**
+	 * <p>
+	 * Returns the expiration date.
+	 * </p>
+	 * @return Date.
+	 */
 	public Date getExpiration() {
 		int expireIndex = Util.indexOfString(cookie, "Expires=", 0, false);
 		//
@@ -70,6 +114,12 @@ public final class Cookie {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Returns the path.
+	 * </p>
+	 * @return Path.
+	 */
 	public String getPath() {
 		int pathIndex = Util.indexOfString(cookie, "Path=", 0, false);
 		//
@@ -82,6 +132,12 @@ public final class Cookie {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Returns the domain.
+	 * </p>
+	 * @return Domain.
+	 */
 	public String getDomain() {
 		int domainIndex = Util.indexOfString(cookie, "Domain=", 0, false);
 		//
@@ -94,14 +150,32 @@ public final class Cookie {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Returns whether it is secure.
+	 * </p>
+	 * @return Secure (true).
+	 */
 	public boolean isSecure() {
 		return Util.indexOfString(cookie, "Secure", 0, false) != -1;
 	}
 	
+	/**
+	 * <p>
+	 * Returns whether it is HTTP only.
+	 * </p>
+	 * @return HTTP only (true).
+	 */
 	public boolean isHttpOnly() {
 		return Util.indexOfString(cookie, "HttpOnly", 0, false) != -1;
 	}
 	
+	/**
+	 * <p>
+	 * Returns whether it is expired.
+	 * </p>
+	 * @return Expired (true).
+	 */
 	public boolean isExpired() {
 		Date expiration = getExpiration();
 		//
@@ -150,18 +224,5 @@ public final class Cookie {
 	 */
 	public String toString() {
 		return cookie;
-	}
-	
-	public static void main(String[] args) {
-		Cookie cookie = new Cookie("SSID=Ap4PGTEq; Domain=.foo.com; Path=/; Expires=Wed, 13 Jan 2013 22:23:01 GMT; Secure; HttpOnly");
-		//
-		System.out.println("Name: " + cookie.getName());
-		System.out.println("Value: " + cookie.getValue());
-		System.out.println("Path: " + cookie.getPath());
-		System.out.println("Domain: " + cookie.getDomain());
-		System.out.println("Expiration: " + cookie.getExpiration());
-		System.out.println("Secure: " + cookie.isSecure());
-		System.out.println("HttpOnly: " + cookie.isHttpOnly());
-		System.out.println("Expired: " + cookie.isExpired());
 	}
 }

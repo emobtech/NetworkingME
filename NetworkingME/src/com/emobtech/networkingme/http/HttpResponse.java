@@ -1,5 +1,6 @@
 /* HttpResponse.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +25,6 @@ package com.emobtech.networkingme.http;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 
 import javax.microedition.io.HttpConnection;
@@ -33,62 +33,137 @@ import com.emobtech.networkingme.Response;
 import com.emobtech.networkingme.URL;
 import com.emobtech.networkingme.util.Util;
 
+/**
+ * <p>
+ * This class represents a HTTP response.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public final class HttpResponse extends Response {
-	
+	/**
+	 * <p>
+	 * Code.
+	 * </p>
+	 */
 	private int code;
-	private byte[] buffer;
+
+	/**
+	 * <p>
+	 * Payload.
+	 * </p>
+	 */
+	private byte[] payload;
+	
+	/**
+	 * <p>
+	 * Header.
+	 * </p>
+	 */
 	private Hashtable header;
 	
+	/**
+	 * <p>
+	 * Creates a HttpResponse from a given connection.
+	 * </p>
+	 * @param conn Connection.
+	 * @throws IOException If any I/O error occurs.
+	 */
 	HttpResponse(HttpConnection conn) throws IOException {
 		code = conn.getResponseCode();
-		buffer = readBody(conn);
+		payload = readPayload(conn);
 		header = readHeader(conn);
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Response#wasSuccessful()
+	 */
 	public boolean wasSuccessful() {
 		return code >= HttpRequest.Code.OK
 			&& code < HttpRequest.Code.BAD_REQUEST;
 	}
 	
+	/**
+	 * @see com.emobtech.networkingme.Response#getCode()
+	 */
 	public int getCode() {
 		return code;
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Response#getBytes()
+	 */
 	public byte[] getBytes() {
-		return buffer;
+		return payload;
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Response#getString()
+	 */
 	public String getString() {
-		try {
-			return new String(buffer, Util.UTF8);
-		} catch (UnsupportedEncodingException e) {
-			return new String(buffer);
-		}
+		return Util.toStringBytes(payload);
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Response#getLength()
+	 */
 	public long getLength() {
-		return buffer.length;
+		return payload.length;
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Response#getType()
+	 */
 	public String getType() {
 		return getHeader(HttpRequest.Header.CONTENT_TYPE);
 	}
 	
+	/**
+	 * <p>
+	 * Returns the value of a given field.
+	 * </p>
+	 * @param key Field key.
+	 * @return Value.
+	 * @see HttpRequest.Header
+	 */
 	public String getHeader(String key) {
 		return (String)header.get(key.toLowerCase());
 	}
 	
+	/**
+	 * <p>
+	 * Returns whether the request should redirect to a different location.
+	 * </p>
+	 * @return Should redirect (true).
+	 * @see HttpResponse#getRedirectURL()
+	 */
 	public boolean wasRedirected() {
 		return code >= HttpRequest.Code.MULTIPLE_CHOICES
 			&& code < HttpRequest.Code.BAD_REQUEST;
 	}
 
+	/**
+	 * <p>
+	 * Returns the URL which the request must be redirected to. <code>null</code>
+	 * is returned is case redirect was not necessary.
+	 * </p>
+	 * @return Redirect URL.
+	 * @see HttpResponse#getHeader(String)
+	 * @see HttpRequest.Header#LOCATION
+	 */
 	public URL getRedirectURL() {
 		String location = getHeader(HttpRequest.Header.LOCATION);
 		//
 		return location != null ? new URL(location) : null;
 	}
 	
+	/**
+	 * <p>
+	 * Returns the cookies.
+	 * </p>
+	 * @return Cookies.
+	 */
 	public Cookie[] getCookies() {
 		String cookie = getHeader(HttpRequest.Header.SET_COOKIE);
 		//
@@ -106,7 +181,15 @@ public final class HttpResponse extends Response {
 		}
 	}
 	
-	private byte[] readBody(HttpConnection conn) throws IOException {
+	/**
+	 * <p>
+	 * Reads the payload from a given connection.
+	 * </p>
+	 * @param conn Connection.
+	 * @return Payload.
+	 * @throws IOException If any I/O error occurs.
+	 */
+	private byte[] readPayload(HttpConnection conn) throws IOException {
 		InputStream in = conn.openInputStream();
 		//
 		try {
@@ -116,6 +199,14 @@ public final class HttpResponse extends Response {
 		}
 	}
 
+	/**
+	 * <p>
+	 * Reads the header fields from a given connection.
+	 * </p>
+	 * @param conn Connection.
+	 * @return Header fields.
+	 * @throws IOException If any I/O error occurs.
+	 */
 	private Hashtable readHeader(HttpConnection conn) throws IOException {
 		final int END = 100;
 		//

@@ -1,5 +1,6 @@
 /* URLImageItem.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
