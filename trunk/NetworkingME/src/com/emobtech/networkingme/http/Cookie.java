@@ -30,12 +30,19 @@ public final class Cookie {
 	
 	private String cookie;
 	
-	Cookie(String cookie) {
+	public Cookie(String cookie) {
 		if (Util.isEmptyString(cookie)) {
 			throw new IllegalArgumentException("Cookie null or empty!");
 		}
 		//
 		this.cookie = cookie;
+		//
+		if (Util.isEmptyString(getName())) {
+			throw new IllegalArgumentException("Cookie's name missing!");
+		}
+		if (Util.isEmptyString(getValue())) {
+			throw new IllegalArgumentException("Cookie's value missing!");
+		}
 	}
 	
 	public String getName() {
@@ -118,21 +125,17 @@ public final class Cookie {
 		//
 		Cookie cookie = (Cookie)obj;
 		//
-		try {
-			if (!getName().equals(cookie.getName())) {
-				return false;
-			}
-			if (!getDomain().equals(cookie.getDomain())) {
-				return false;
-			}
-			if (!getPath().equals(cookie.getPath())) {
-				return false;
-			}
-			//
-			return true;
-		} catch (NullPointerException e) {
+		if (!Util.areEqual(getName(), cookie.getName())) {
 			return false;
 		}
+		if (!Util.areEqual(getDomain(), cookie.getDomain())) {
+			return false;
+		}
+		if (!Util.areEqual(getPath(), cookie.getPath())) {
+			return false;
+		}
+		//
+		return true;
 	}
 	
 	/**

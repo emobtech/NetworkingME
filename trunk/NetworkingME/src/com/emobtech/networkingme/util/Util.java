@@ -387,14 +387,14 @@ public final class Util {
 	
 	public static final String replaceAllStrings(String str, String searchStr,
 		String replacementStr) {
-		if (isEmptyString(str)) {
-			throw new IllegalArgumentException("Str null or empty.");
+		if (str == null) {
+			throw new IllegalArgumentException("Str null!");
 		}
-		if (isEmptyString(searchStr)) {
-			throw new IllegalArgumentException("SearchStr null or empty.");
+		if (searchStr == null) {
+			throw new IllegalArgumentException("SearchStr null!");
 		}
-		if (isEmptyString(replacementStr)) {
-			throw new IllegalArgumentException("ReplacementStr null or empty.");
+		if (replacementStr == null) {
+			throw new IllegalArgumentException("ReplacementStr null!");
 		}
 		//
 		StringBuffer sb = new StringBuffer();
@@ -413,6 +413,16 @@ public final class Util {
 		sb.append(str.substring(startPos, str.length()));
 		//
 		return sb.toString();
+	}
+	
+	public static boolean areEqual(Object obj1, Object obj2) {
+		if (obj1 == null && obj2 == null) {
+			return true;
+		} else if (obj1 == null || obj2 == null) {
+			return false;
+		} else {
+			return obj1.equals(obj2);
+		}
 	}
 	
 	/**
