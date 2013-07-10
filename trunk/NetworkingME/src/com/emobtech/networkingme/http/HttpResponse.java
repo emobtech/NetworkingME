@@ -45,7 +45,7 @@ public final class HttpResponse extends Response {
 		header = readHeader(conn);
 	}
 
-	public boolean wasSuccessfull() {
+	public boolean wasSuccessful() {
 		return code >= HttpRequest.Code.OK
 			&& code < HttpRequest.Code.BAD_REQUEST;
 	}

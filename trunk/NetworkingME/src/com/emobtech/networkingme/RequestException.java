@@ -1,5 +1,6 @@
 /* RequestException.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,12 +23,38 @@
  */
 package com.emobtech.networkingme;
 
+/**
+ * <p>
+ * This class represents an exception that can be thrown during a request, 
+ * because of either an exception or unsuccessful response.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public final class RequestException extends Exception {
-	
+	/**
+	 * <p>
+	 * Exception.
+	 * </p> 
+	 */
 	private Exception cause;
+
+	/**
+	 * <p>
+	 * Unsuccessful response.
+	 * </p> 
+	 */
 	private Response response;
 	
-	RequestException(Exception cause) {
+	/**
+	 * <p>
+	 * Creates a new RequestException with an exception as cause.
+	 * </p>
+	 * @param cause Exception.
+	 * @throws IllegalArgumentException Cause null!
+	 */
+	public RequestException(Exception cause) {
 		if (cause == null) {
 			throw new IllegalArgumentException("Cause null!");
 		}
@@ -35,7 +62,14 @@ public final class RequestException extends Exception {
 		this.cause = cause;
 	}
 
-	RequestException(Response response) {
+	/**
+	 * <p>
+	 * Creates a new RequestException with an unsuccessful response as cause.
+	 * </p>
+	 * @param response Response.
+	 * @throws IllegalArgumentException Response null!
+	 */
+	public RequestException(Response response) {
 		if (response == null) {
 			throw new IllegalArgumentException("Response null!");
 		}
@@ -43,6 +77,12 @@ public final class RequestException extends Exception {
 		this.response = response;
 	}
 	
+	/**
+	 * <p>
+	 * Returns code. -1 is always returned when an exception is the cause.
+	 * </p>
+	 * @return Code.
+	 */
 	public int getCode() {
 		if (cause != null) {
 			return -1;
@@ -51,14 +91,29 @@ public final class RequestException extends Exception {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Returns the exception cause.
+	 * </p>
+	 * @return Exception.
+	 */
 	public Exception getCause() {
 		return cause;
 	}
 	
+	/**
+	 * <p>
+	 * Returns the unsuccessful response.
+	 * </p>
+	 * @return Response.
+	 */
 	public Response getResponse() {
 		return response;
 	}
 
+	/**
+	 * @see java.lang.Throwable#getMessage()
+	 */
 	public String getMessage() {
 		if (cause != null) {
 			return cause.getMessage();
@@ -67,6 +122,9 @@ public final class RequestException extends Exception {
 		}
 	}
 
+	/**
+	 * @see java.lang.Throwable#printStackTrace()
+	 */
 	public void printStackTrace() {
 		if (cause != null) {
 			cause.printStackTrace();
@@ -75,6 +133,9 @@ public final class RequestException extends Exception {
 		}
 	}
 
+	/**
+	 * @see java.lang.Throwable#toString()
+	 */
 	public String toString() {
 		return getMessage();
 	}

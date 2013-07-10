@@ -1,5 +1,6 @@
 /* RequestOperation.java
  * 
+ * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,17 +23,72 @@
  */
 package com.emobtech.networkingme;
 
-public final class RequestOperation implements Runnable {
-	
+/**
+ * <p>
+ * This class implements an operation that is used to run a request.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
+public final class RequestOperation {
+	/**
+	 * <p>
+	 * This interface represents a listener to events that triggers during a 
+	 * request execution.
+	 * </p>
+	 */
 	public static interface Listener {
+		/**
+		 * <p>
+		 * Called when the request is concluded successfully.
+		 * </p>
+		 * @param request Request.
+		 * @param response Response.
+		 */
 		void onSuccess(Request request, Response response);
+
+		/**
+		 * <p>
+		 * Called when the request is concluded regardless of result.
+		 * </p>
+		 * @param request Request.
+		 * @param response Response.
+		 */
 		void onComplete(Request request, Response response);
+
+		/**
+		 * <p>
+		 * Called when the request fails because of either an exception or 
+		 * unsuccessful result.
+		 * </p>
+		 * @param request Request.
+		 * @param response Response.
+		 */
 		void onFailure(Request request, RequestException exception);
 	}
 
+	/**
+	 * <p>
+	 * Request.
+	 * </p>
+	 */
 	private Request request;
+	
+	/**
+	 * <p>
+	 * Listener.
+	 * </p>
+	 */
 	private Listener listener;
 	
+	/**
+	 * <p>
+	 * Creates a RequestOperation to run a given request.
+	 * </p>
+	 * @param request Request.
+	 * @throws IllegalArgumentException Request is null!
+	 */
 	public RequestOperation(Request request) {
 		if (request == null) {
 			throw new IllegalArgumentException("Request is null!");
@@ -41,29 +97,47 @@ public final class RequestOperation implements Runnable {
 		this.request = request;
 	}
 	
-	public void perform(Listener listener) {
+	/**
+	 * <p>
+	 * Starts the run of the request.
+	 * </p>
+	 * @param listener Listener.
+	 * @see TextListener
+	 * @see BinaryListener
+	 */
+	public void start(Listener listener) {
 		this.listener = listener;
 		//
-		ThreadDispatcher.getInstance().dispatch(this);
+		dispath();
 	}
 
-	public void run() {
-		try {
-			Response response = request.send();
-			//
-			if (listener != null) {
-				listener.onComplete(request, response);
-				//
-				if (response.wasSuccessfull()) {
-					listener.onSuccess(request, response);
-				} else {
-					listener.onFailure(request, new RequestException(response));
+	/**
+	 * <p>
+	 * Dispatches the request.
+	 * </p>
+	 */
+	private void dispath() {
+		ThreadDispatcher.getInstance().dispatch(new Runnable() {
+			public void run() {
+				try {
+					Response response = request.send();
+					//
+					if (listener != null) {
+						listener.onComplete(request, response);
+						//
+						if (response.wasSuccessful()) {
+							listener.onSuccess(request, response);
+						} else {
+							listener.onFailure(
+								request, new RequestException(response));
+						}
+					}
+				} catch (Exception e) {
+					if (listener != null) {
+						listener.onFailure(request, new RequestException(e));
+					}
 				}
 			}
-		} catch (Exception e) {
-			if (listener != null) {
-				listener.onFailure(request, new RequestException(e));
-			}
-		}
+		});
 	}
 }

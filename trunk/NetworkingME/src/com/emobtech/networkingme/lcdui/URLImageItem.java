@@ -212,7 +212,7 @@ public final class URLImageItem extends CustomItem {
 	 */
 	private void requestImage() {
 		RequestOperation oper = new RequestOperation(new HttpRequest(url));
-		oper.perform(new ImageListener() {
+		oper.start(new ImageListener() {
 			public void onImage(Image image) {
 				URLImageItem.this.image = image;
 				//
