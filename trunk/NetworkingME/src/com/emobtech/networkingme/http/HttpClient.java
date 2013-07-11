@@ -319,6 +319,11 @@ public final class HttpClient {
 	 * <p>
 	 * Starts the upload of a file to a given path.
 	 * </p>
+	 * <p>
+	 * <strong>Important:</strong> Some platforms may impose a size limit for
+	 * file uploading. Be aware just in case this method fails when trying to 
+	 * send files bigger than 1KB, for instance.
+	 * </p>
 	 * @param path Path.
 	 * @param name Field name.
 	 * @param filename Filename.
