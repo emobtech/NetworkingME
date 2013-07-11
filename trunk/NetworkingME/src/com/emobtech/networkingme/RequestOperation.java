@@ -34,8 +34,8 @@ package com.emobtech.networkingme;
 public final class RequestOperation {
 	/**
 	 * <p>
-	 * This interface represents a listener to events that triggers during a 
-	 * request execution.
+	 * This interface represents a listener to events that are triggered during
+	 * a request execution.
 	 * </p>
 	 */
 	public static interface Listener {
