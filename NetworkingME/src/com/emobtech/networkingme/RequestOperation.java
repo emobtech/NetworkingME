@@ -63,7 +63,7 @@ public final class RequestOperation {
 		 * unsuccessful result.
 		 * </p>
 		 * @param request Request.
-		 * @param response Response.
+		 * @param exception Exception.
 		 */
 		void onFailure(Request request, RequestException exception);
 	}

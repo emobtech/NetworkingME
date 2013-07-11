@@ -23,6 +23,8 @@
  */
 package com.emobtech.networkingme;
 
+import com.emobtech.networkingme.util.Util;
+
 /**
  * <p>
  * This class represents a listener to request events, which provide a utility 
@@ -46,7 +48,7 @@ public abstract class TextListener implements RequestOperation.Listener {
 	 */
 	public final void onSuccess(Request request, Response response) {
 		try {
-			onText(response.getString());
+			onText(Util.toString(response.getPayload().getBytes()));
 		} catch (Exception e) {
 			onFailure(request, new RequestException(e));
 		}

@@ -23,6 +23,8 @@
  */
 package com.emobtech.networkingme;
 
+import com.emobtech.networkingme.util.Util;
+
 /**
  * <p>
  * This class represents an exception that can be thrown during a request, 
@@ -118,7 +120,7 @@ public final class RequestException extends Exception {
 		if (cause != null) {
 			return cause.getMessage();
 		} else {
-			return response.getString();
+			return Util.toString(response.getPayload().getBytes());
 		}
 	}
 
@@ -129,7 +131,8 @@ public final class RequestException extends Exception {
 		if (cause != null) {
 			cause.printStackTrace();
 		} else {
-			System.out.println(response.getString());
+			System.out.println(
+				Util.toString(response.getPayload().getBytes()));
 		}
 	}
 
