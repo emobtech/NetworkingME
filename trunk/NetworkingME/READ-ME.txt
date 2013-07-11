@@ -1,0 +1,32 @@
+********************************************************************************
+*                        NETWORKING ME 1.0.0 - READ ME                         *
+********************************************************************************
+*                    https://java.net/projects/networkingme                    *
+********************************************************************************
+
+ DESCRIPTION:
+********************************************************************************
+Networking ME is a networking library for Java ME platform. It's built on top of
+Generic Connection Framework and other foundation technologies. It has a modular
+architecture with well-designed, feature-rich APIs that are easy to use.
+
+ MINIMUM REQUIREMENTS:
+********************************************************************************
++ Runtime Environment
+  - Java ME: MIDP 2.0 / CLDC 1.0
+
+ AVAILABLE IN THIS VERSION:
+********************************************************************************
+- Initial release.
+
+ KNOWN BUGS IN THIS VERSION:
+********************************************************************************
+- None
+
+ REMARKS:
+********************************************************************************
+- N/A
+  
+ COMING NEXT VERSION: 1.1.0
+********************************************************************************
+- Let us know what you need.
