@@ -209,6 +209,7 @@ public final class HttpResponse extends Response {
 	 */
 	private Hashtable readHeader(HttpConnection conn) throws IOException {
 		final int END = 100;
+		final String SET_COOKIE = HttpRequest.Header.SET_COOKIE.toLowerCase();
 		//
 		String key;
 		String value;
@@ -222,7 +223,11 @@ public final class HttpResponse extends Response {
 				value = (String)headers.get(key);
 				//
 				if (value != null) {
-					value += '|' + conn.getHeaderField(i);
+					if (SET_COOKIE.equals(key)) {
+						value += '|' + conn.getHeaderField(i);
+					} else {
+						value += ',' + conn.getHeaderField(i);
+					}
 				} else {
 					value = conn.getHeaderField(i);
 				}
