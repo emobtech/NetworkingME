@@ -36,18 +36,44 @@ import java.util.Hashtable;
 import java.util.TimeZone;
 import java.util.Vector;
 
+/**
+ * <p>
+ * This class implements a series of utility methods.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public final class Util {
+	/**
+	 * <p>
+	 * EN-US locale.
+	 * </p>
+	 */
+	public static final String LOCALE_ENUS = "en-US";
+	
+	/**
+	 * <p>
+	 * UTF-8 encoding.
+	 * </p>
+	 */
 	public static final String UTF8 = "UTF-8";
-	public static final String USER_AGENT = "NetworkingME/1.0 (JavaME; Profile/MIDP-2.0 Configuration/CLDC-1.0)";
+
+	/**
+	 * <p>
+	 * Default user agent.
+	 * </p>
+	 */
+	public static final String USER_AGENT =
+		"NetworkingME/1.0 (JavaME; Profile/MIDP-2.0 Configuration/CLDC-1.0)";
 	
 	/**
      * <p>
-     * Split a string based on a given delimiter.
+     * Splits a string based on a given delimiter.
      * </p>
      * @param str String.
      * @param delimiter Delimiter.
      * @return String tokens.
-     * @throws IllegalArgumentException If str is null.
      */
     public static String[] splitString(String str, char delimiter) {
     	if (isEmptyString(str)) {
@@ -72,7 +98,7 @@ public final class Util {
 	
 	/**
 	 * <p>
-	 * Verify whether the given string is null or empty.
+	 * Checks whether the given string is null or empty.
 	 * </p>
 	 * @param str The string.
 	 * @return true null/empty.
@@ -81,6 +107,14 @@ public final class Util {
 		return str == null || str.trim().length() == 0;
 	}
 	
+	/**
+	 * <p>
+	 * Reads all bytes from a given stream.
+	 * </p>
+	 * @param in Stream.
+	 * @return Bytes.
+	 * @throws IOException If any I/O error occurs.
+	 */
 	public static byte[] readBytes(InputStream in) throws IOException {
 		if (in == null) {
 			return new byte[0];
@@ -96,6 +130,14 @@ public final class Util {
 		return out.toByteArray();
 	}
 	
+	/**
+	 * <p>
+	 * Writes a given bytes to a stream.
+	 * </p>
+	 * @param data Bytes.
+	 * @param out Stream.
+	 * @throws IOException If any I/O error occurs.
+	 */
 	public static void writeBytes(byte[] data, OutputStream out)
 		throws IOException {
 		ByteArrayInputStream in = new ByteArrayInputStream(data);
@@ -106,6 +148,13 @@ public final class Util {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Encodes a given string.
+	 * </p>
+	 * @param str String.
+	 * @return Encoded string.
+	 */
 	public static String encodeStringURL(String str) {
 		if (str.indexOf('%') == -1) {
 			return encodeStringURL(str, UTF8);
@@ -114,6 +163,13 @@ public final class Util {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Encodes a given query string.
+	 * </p>
+	 * @param queryString Query string.
+	 * @return Encoded query string.
+	 */
 	public static String encodeQueryString(String queryString) {
 		StringBuffer encodedQueryString = new StringBuffer();
 		String[] params = Util.splitString(queryString, '&');
@@ -133,6 +189,13 @@ public final class Util {
 		return encodedQueryString.toString();
 	}
 	
+	/**
+	 * <p>
+	 * Creates a query string from a table of parameters.
+	 * </p>
+	 * @param parameters Parameters.
+	 * @return Query string.
+	 */
 	public static String toQueryString(Hashtable parameters) {
 		if (parameters == null || parameters.size() == 0) {
 			return "";
@@ -157,6 +220,13 @@ public final class Util {
 		return queryStr.toString();
 	}
 	
+	/**
+	 * <p>
+	 * Formats a given path.
+	 * </p>
+	 * @param path Path.
+	 * @return Formatted path.
+	 */
 	public static String formatPath(String path) {
 		if (isEmptyString(path)) {
 			return "";
@@ -169,6 +239,13 @@ public final class Util {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Formats a given query string.
+	 * </p>
+	 * @param queryString Query string.
+	 * @return Formatted query string.
+	 */
 	public static String formatQueryString(String queryString) {
 		if (isEmptyString(queryString)) {
 			return "";
@@ -181,11 +258,25 @@ public final class Util {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Formats a cookie.
+	 * </p>
+	 * @param name Name.
+	 * @param value Value.
+	 * @return Formatted cookie.
+	 */
 	public static String formatCookie(String name, String value) {
 		return name + '=' + value;
 	}
 	
-	//Wed, 13 Jan 2021 22:23:01 GMT
+	/**
+	 * <p>
+	 * Formats a given cookie date.
+	 * </p>
+	 * @param date Date as string.
+	 * @return Date.
+	 */
 	public static Date parseCookieDate(String date) {
 		if (isEmptyString(date)) {
 			return null;
@@ -215,6 +306,14 @@ public final class Util {
 		return cal.getTime();
 	}
 	
+	/**
+	 * <p>
+	 * Returns the month number from a given month name.
+	 * </p>
+	 * @param name Name.
+	 * @return Number.
+	 * @throws IllegalArgumentException Name is null!
+	 */
 	public static int getMonth(String name) {
 		if (isEmptyString(name)) {
 			throw new IllegalArgumentException("Name is null!");
@@ -238,6 +337,14 @@ public final class Util {
 		return -1;
 	}
 	
+	/**
+	 * <p>
+	 * Encodes a given string with a encoding.
+	 * </p>
+	 * @param str String.
+	 * @param encoding Encoding.
+	 * @return Enconded string.
+	 */
 	public static String encodeStringURL(String str, String encoding) {
 		if (isEmptyString(str)) {
 			return str;
@@ -290,14 +397,22 @@ public final class Util {
 	
 	/**
 	 * <p>
-	 * Get a hex value of a char.
+	 * Returns the hex value of a char.
 	 * </p>
 	 * @param c Char.
+	 * @return Hex value.
 	 */
 	public static String getHexChar(int c) {
 		return (c < 16 ? "%0" : "%") + Integer.toHexString(c).toUpperCase();
 	}
 	
+	/**
+	 * <p>
+	 * Encodes a given string to Base64.
+	 * </p>
+	 * @param str String.
+	 * @return Base64 string.
+	 */
 	public static String encodeStringBase64(String str) {
 		if (isEmptyString(str)) {
 			return str;
@@ -355,12 +470,28 @@ public final class Util {
 		return dest.toString();
 	}
 	
+	/**
+	 * <p>
+	 * Returns the system property value or a default value if it is 
+	 * <code>null</code>.
+	 * </p>
+	 * @param key Property key.
+	 * @param defaultValue Default value.
+	 * @return Value.
+	 */
 	public static String getSystemProperty(String key, String defaultValue) {
 		String value = System.getProperty(key);
 		//
 		return isEmptyString(value) ? defaultValue : value;
 	}
 	
+	/**
+	 * <p>
+	 * Returns the bytes of a given string.
+	 * </p>
+	 * @param str String.
+	 * @return Bytes.
+	 */
 	public static byte[] toBytesString(String str) {
 		if (isEmptyString(str)) {
 			return new byte[0];
@@ -373,6 +504,13 @@ public final class Util {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Returns the string of a given bytes.
+	 * </p>
+	 * @param bytes Bytes.
+	 * @return String.
+	 */
 	public static String toStringBytes(byte[] bytes) {
 		if (bytes == null || bytes.length == 0) {
 			return "";
@@ -385,6 +523,16 @@ public final class Util {
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Finds the index of a given string.
+	 * </p>
+	 * @param str String.
+	 * @param search String to find.
+	 * @param fromIndex From index.
+	 * @param sensitive Case sensitive (true).
+	 * @return Index.
+	 */
 	public static int indexOfString(String str, String search, int fromIndex, 
 		boolean sensitive) {
 		if (!sensitive) {
@@ -395,6 +543,16 @@ public final class Util {
 		return str.indexOf(search, fromIndex);
 	}
 	
+	/**
+	 * <p>
+	 * Finds the index of a given string or its last index.
+	 * </p>
+	 * @param str String.
+	 * @param search String to find.
+	 * @param fromIndex From index.
+	 * @param sensitive Case sensitive (true).
+	 * @return Index.
+	 */
 	public static int indexOrLastOfString(String str, String search, 
 		int fromIndex, boolean sensitive) {
 		int index = indexOfString(str, search, fromIndex, sensitive);
@@ -402,6 +560,15 @@ public final class Util {
 		return index != -1 ? index : str.length();
 	}
 	
+	/**
+	 * <p>
+	 * Replaces all occurences of a given string.
+	 * </p>
+	 * @param str String.
+	 * @param searchStr String to replace.
+	 * @param replacementStr Replacement string.
+	 * @return Replaced string.
+	 */
 	public static String replaceAllStrings(String str, String searchStr,
 		String replacementStr) {
 		if (str == null) {
@@ -432,6 +599,15 @@ public final class Util {
 		return sb.toString();
 	}
 	
+	/**
+	 * <p>
+	 * Checks whether the objects are equals. In case both are <code>null</code>,
+	 * <code>true</code> is returned.
+	 * </p>
+	 * @param obj1 Object 1.
+	 * @param obj2 Object 2.
+	 * @return Equal (true).
+	 */
 	public static boolean areEqual(Object obj1, Object obj2) {
 		if (obj1 == null && obj2 == null) {
 			return true;
