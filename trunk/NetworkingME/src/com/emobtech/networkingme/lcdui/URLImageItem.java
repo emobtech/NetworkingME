@@ -87,6 +87,7 @@ public final class URLImageItem extends CustomItem {
 	 * @param layout Layout directive.
 	 * @param placeholder Placeholder, displayed while image is loaded.
 	 * @param altText Alternate text.
+	 * @throws IllegalArgumentException URL is null!
 	 */
 	public URLImageItem(String label, URL url, int layout, Image placeholder, 
 		String altText) {

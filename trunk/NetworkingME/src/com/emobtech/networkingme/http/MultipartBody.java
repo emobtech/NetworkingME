@@ -30,22 +30,58 @@ import java.io.InputStream;
 import com.emobtech.networkingme.Payload;
 import com.emobtech.networkingme.util.Util;
 
+/**
+ * <p>
+ * This class represents a multipart body. It is used in a POST HTTP request 
+ * to send either text or binary data. Mix of text and binary is also supported.
+ * </p>
+ * <p>
+ * Reference: <br />
+ * <a href="http://en.wikipedia.org/wiki/Multipart/form-data#Multipart_messages" target="_blank">
+ *     http://en.wikipedia.org/wiki/Multipart/form-data#Multipart_messages
+ * </a>
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public final class MultipartBody implements Payload {
-	
-	private ByteArrayOutputStream body = new ByteArrayOutputStream(1024);
+	/**
+	 * <p>
+	 * Payload.
+	 * </p>
+	 */
+	private ByteArrayOutputStream payload = new ByteArrayOutputStream(1024);
 
+	/**
+	 * @see com.emobtech.networkingme.Payload#getType()
+	 */
 	public String getType() {
 		return "multipart/form-data; boundary=" + getBoundary();
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Payload#getLength()
+	 */
 	public long getLength() {
-		return body.size();
+		return payload.size();
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Payload#getBytes()
+	 */
 	public byte[] getBytes() {
-		return body.toByteArray();
+		return payload.toByteArray();
 	}
 	
+	/**
+	 * <p>
+	 * Adds a part to carry a name=value content.
+	 * </p>
+	 * @param name Name.
+	 * @param value Value.
+	 * @throws IllegalArgumentException Name/Value null or empty!
+	 */
 	public void addPart(String name, String value) {
 		if (Util.isEmptyString(name) || Util.isEmptyString(value)) {
 			throw new IllegalArgumentException("Name/Value null or empty!");
@@ -54,14 +90,25 @@ public final class MultipartBody implements Payload {
 		final String header = createHeader(name, null, null);
 		//
 		try {
-			body.write(Util.toBytesString(header));
-			body.write(Util.toBytesString(value));
-			body.write(Util.toBytesString("\n--" + getBoundary() + "--"));
+			payload.write(Util.toBytesString(header));
+			payload.write(Util.toBytesString(value));
+			payload.write(Util.toBytesString("\n--" + getBoundary() + "--"));
 		} catch (IOException e) {
 			throw new IllegalStateException("Error by writing part!");
 		}
 	}
 	
+	/**
+	 * <p>
+	 * Adds a part to carry a binary content.
+	 * </p>
+	 * @param name Name.
+	 * @param filename Filename.
+	 * @param contentType Content type, e.g. "image/png".
+	 * @param data Data.
+	 * @throws IllegalArgumentException Name, filename, contentType and data 
+	 *         null or empty!
+	 */
 	public void addPart(String name, String filename, String contentType, 
 		byte[] data) {
 		if (Util.isEmptyString(name) 
@@ -75,23 +122,50 @@ public final class MultipartBody implements Payload {
 		final String header = createHeader(name, filename, contentType);
 		//
 		try {
-			body.write(Util.toBytesString(header.toString()));
-			body.write(data);
-			body.write(Util.toBytesString("\n--" + getBoundary() + "--"));
+			payload.write(Util.toBytesString(header.toString()));
+			payload.write(data);
+			payload.write(Util.toBytesString("\n--" + getBoundary() + "--"));
 		} catch (IOException e) {
 			throw new IllegalStateException("Error by writing part!");
 		}
 	}
 
+	/**
+	 * <p>
+	 * Adds a part to carry a binary content.
+	 * </p>
+	 * @param name Name.
+	 * @param filename Filename.
+	 * @param contentType Content type, e.g. "image/png".
+	 * @param data Data.
+	 * @throws IllegalArgumentException Name, filename, contentType and data 
+	 *         null or empty!
+	 * @throws IOException If any I/O error occurs.
+	 */
 	public void addPart(String name, String filename, String contentType,
 		InputStream data) throws IOException {
 		addPart(name, filename, contentType, Util.readBytes(data));
 	}
 
+	/**
+	 * <p>
+	 * Returns the part boundary.
+	 * </p>
+	 * @return Boundary.
+	 */
 	private String getBoundary() {
 		return "----------NetworkingMEBoundary_" + String.valueOf(hashCode());
 	}
 	
+	/**
+	 * <p>
+	 * Creates a part header.
+	 * </p>
+	 * @param name Name.
+	 * @param filename Filename.
+	 * @param contentType Content type.
+	 * @return Header.
+	 */
 	private String createHeader(String name, String filename, 
 		String contentType) {
 		StringBuffer header = new StringBuffer();

@@ -27,10 +27,27 @@ import javax.microedition.lcdui.Image;
 
 import com.emobtech.networkingme.BinaryListener;
 
+/**
+ * <p>
+ * This class represents a listener to request events, which provide a utility 
+ * method to obtain the image content easily, result of a successful response.
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public abstract class ImageListener extends BinaryListener {
-	
+	/**
+	 * <p>
+	 * Called when the request is concluded successfully.
+	 * </p>
+	 * @param image Response content as image.
+	 */
 	public abstract void onImage(Image image);
 	
+	/**
+	 * @see com.emobtech.networkingme.BinaryListener#onBinary(byte[])
+	 */
 	public final void onBinary(byte[] bytes) {
 		onImage(Image.createImage(bytes, 0, bytes.length));
 	}

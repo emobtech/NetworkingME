@@ -28,34 +28,87 @@ import java.util.Hashtable;
 import com.emobtech.networkingme.Payload;
 import com.emobtech.networkingme.util.Util;
 
+/**
+ * <p>
+ * This class represents a web form body. It is used in a POST HTTP request 
+ * to send name-value pairs.
+ * </p>
+ * <p>
+ * Reference: <br />
+ * <a href="http://en.wikipedia.org/wiki/POST_(HTTP)" target="_blank">
+ *     http://en.wikipedia.org/wiki/POST_(HTTP)
+ * </a>
+ * </p>
+ * @author Ernandes Jr. (ernandes@emobtech.com)
+ * @version 1.0
+ * @since 1.0
+ */
 public final class WebFormBody implements Payload {
-	
+	/**
+	 * <p>
+	 * Fields.
+	 * </p>
+	 */
 	private StringBuffer fieldsStr = new StringBuffer();
-	private byte[] body;
 	
+	/**
+	 * <p>
+	 * Payload.
+	 * </p>
+	 */
+	private byte[] payload;
+	
+	/**
+	 * <p>
+	 * Creates a WebFormBody.
+	 * </p>
+	 */
 	public WebFormBody() {
 	}
 
+	/**
+	 * <p>
+	 * Creates a WebFormBody.
+	 * </p>
+	 * @param fields Fields.
+	 */
 	public WebFormBody(Hashtable fields) {
 		fieldsStr.append(Util.toQueryString(fields));
 	}
 	
+	/**
+	 * @see com.emobtech.networkingme.Payload#getType()
+	 */
 	public String getType() {
 		return "application/x-www-form-urlencoded";
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Payload#getLength()
+	 */
 	public long getLength() {
 		process();
 		//
-		return body.length;
+		return payload.length;
 	}
 
+	/**
+	 * @see com.emobtech.networkingme.Payload#getBytes()
+	 */
 	public byte[] getBytes() {
 		process();
 		//
-		return body;
+		return payload;
 	}
 	
+	/**
+	 * <p>
+	 * Adds a field.
+	 * </p>
+	 * @param name Name.
+	 * @param value Value.
+	 * @throws IllegalArgumentException Name/Value null or empty!
+	 */
 	public void addField(String name, String value) {
 		if (Util.isEmptyString(name) || Util.isEmptyString(value)) {
 			throw new IllegalArgumentException("Name/Value null or empty!");
@@ -69,12 +122,17 @@ public final class WebFormBody implements Payload {
 		fieldsStr.append('=');
 		fieldsStr.append(Util.encodeStringURL(value));
 		//
-		body = null;
+		payload = null;
 	}
 
+	/**
+	 * <p>
+	 * Process the payload.
+	 * </p>
+	 */
 	private void process() {
-		if (body == null) {
-			body = Util.toBytesString(fieldsStr.toString());
+		if (payload == null) {
+			payload = Util.toBytesString(fieldsStr.toString());
 		}
 	}
 }
