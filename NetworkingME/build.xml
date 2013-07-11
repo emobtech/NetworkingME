@@ -1,4 +1,4 @@
-<project name="NetworkingME" default="buildAll" basedir=".">
+<project name="NetworkingME" default="build" basedir=".">
 
 	<property file="build.properties"/>
 	
@@ -75,6 +75,4 @@
 			<param name="lib.preprocessor.symbols" value="MIDP20,CLDC10"/>
 		</antcall>
 	</target>
-	
-	<target name="buildAll" depends="build"/>
 </project>
