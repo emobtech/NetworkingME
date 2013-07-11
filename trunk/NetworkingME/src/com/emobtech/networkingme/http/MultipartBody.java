@@ -90,9 +90,9 @@ public final class MultipartBody implements Payload {
 		final String header = createHeader(name, null, null);
 		//
 		try {
-			payload.write(Util.toBytesString(header));
-			payload.write(Util.toBytesString(value));
-			payload.write(Util.toBytesString("\n--" + getBoundary() + "--"));
+			payload.write(Util.toBytes(header));
+			payload.write(Util.toBytes(value));
+			payload.write(Util.toBytes("\n--" + getBoundary() + "--"));
 		} catch (IOException e) {
 			throw new IllegalStateException("Error by writing part!");
 		}
@@ -122,9 +122,9 @@ public final class MultipartBody implements Payload {
 		final String header = createHeader(name, filename, contentType);
 		//
 		try {
-			payload.write(Util.toBytesString(header.toString()));
+			payload.write(Util.toBytes(header.toString()));
 			payload.write(data);
-			payload.write(Util.toBytesString("\n--" + getBoundary() + "--"));
+			payload.write(Util.toBytes("\n--" + getBoundary() + "--"));
 		} catch (IOException e) {
 			throw new IllegalStateException("Error by writing part!");
 		}

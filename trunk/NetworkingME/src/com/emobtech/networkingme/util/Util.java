@@ -492,7 +492,7 @@ public final class Util {
 	 * @param str String.
 	 * @return Bytes.
 	 */
-	public static byte[] toBytesString(String str) {
+	public static byte[] toBytes(String str) {
 		if (isEmptyString(str)) {
 			return new byte[0];
 		}
@@ -511,7 +511,7 @@ public final class Util {
 	 * @param bytes Bytes.
 	 * @return String.
 	 */
-	public static String toStringBytes(byte[] bytes) {
+	public static String toString(byte[] bytes) {
 		if (bytes == null || bytes.length == 0) {
 			return "";
 		}

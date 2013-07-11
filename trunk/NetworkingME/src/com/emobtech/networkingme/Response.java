@@ -53,33 +53,9 @@ public abstract class Response {
 	
 	/**
 	 * <p>
-	 * Returns the content as bytes.
+	 * Returns the payload.
 	 * </p>
-	 * @return Content as bytes.
+	 * @return Payload.
 	 */
-	public abstract byte[] getBytes();
-	
-	/**
-	 * <p>
-	 * Returns the content as string.
-	 * </p>
-	 * @return Content as string.
-	 */
-	public abstract String getString();
-	
-	/**
-	 * <p>
-	 * Returns the content length.
-	 * </p>
-	 * @return Length.
-	 */
-	public abstract long getLength();
-	
-	/**
-	 * <p>
-	 * Returns the content type.
-	 * </p>
-	 * @return Type.
-	 */
-	public abstract String getType();
+	public abstract Payload getPayload();
 }

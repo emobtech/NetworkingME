@@ -29,6 +29,7 @@ import java.util.Hashtable;
 
 import javax.microedition.io.HttpConnection;
 
+import com.emobtech.networkingme.Payload;
 import com.emobtech.networkingme.Response;
 import com.emobtech.networkingme.URL;
 import com.emobtech.networkingme.util.Util;
@@ -90,33 +91,32 @@ public final class HttpResponse extends Response {
 	public int getCode() {
 		return code;
 	}
-
+	
 	/**
-	 * @see com.emobtech.networkingme.Response#getBytes()
+	 * @see com.emobtech.networkingme.Response#getPayload()
 	 */
-	public byte[] getBytes() {
-		return payload;
+	public Payload getPayload() {
+		return new Payload() {
+			public String getType() {
+				return getHeader(HttpRequest.Header.CONTENT_TYPE);
+			}
+			public long getLength() {
+				return payload.length;
+			}
+			public byte[] getBytes() {
+				return payload;
+			}
+		};
 	}
 
 	/**
-	 * @see com.emobtech.networkingme.Response#getString()
+	 * <p>
+	 * Returns the payload's content as string.
+	 * </p>
+	 * @return Payload.
 	 */
-	public String getString() {
-		return Util.toStringBytes(payload);
-	}
-
-	/**
-	 * @see com.emobtech.networkingme.Response#getLength()
-	 */
-	public long getLength() {
-		return payload.length;
-	}
-
-	/**
-	 * @see com.emobtech.networkingme.Response#getType()
-	 */
-	public String getType() {
-		return getHeader(HttpRequest.Header.CONTENT_TYPE);
+	public String getPayloadAsString() {
+		return Util.toString(payload);
 	}
 	
 	/**

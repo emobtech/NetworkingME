@@ -49,7 +49,7 @@ public abstract class BinaryListener implements RequestOperation.Listener {
 	 */
 	public final void onSuccess(Request request, Response response) {
 		try {
-			onBinary(response.getBytes());
+			onBinary(response.getPayload().getBytes());
 		} catch (Exception e) {
 			onFailure(request, new RequestException(e));
 		}

@@ -100,7 +100,8 @@ public final class URL {
 	 * <p>
 	 * The result URL is "http://www.emobtech.com/page.html".
 	 * </p>
-	 * @param url URL.
+	 * @param baseURL Base URL.
+	 * @param path Path.
 	 * @throws IllegalArgumentException URL null or empty!
 	 */
 	public URL(URL baseURL, String path) {
@@ -115,7 +116,8 @@ public final class URL {
 	 * <p>
 	 * The result URL is "http://www.emobtech.com/page.html?parameter=value".
 	 * </p>
-	 * @param url URL.
+	 * @param baseURL Base URL.
+	 * @param path Path.
 	 * @throws IllegalArgumentException URL null or empty!
 	 */
 	public URL(URL baseURL, String path, Hashtable parameters) {

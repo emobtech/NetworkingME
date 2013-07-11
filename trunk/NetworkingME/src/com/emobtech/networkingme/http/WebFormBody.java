@@ -132,7 +132,7 @@ public final class WebFormBody implements Payload {
 	 */
 	private void process() {
 		if (payload == null) {
-			payload = Util.toBytesString(fieldsStr.toString());
+			payload = Util.toBytes(fieldsStr.toString());
 		}
 	}
 }
