@@ -61,6 +61,10 @@
 			<zipfileset dir="${path.build.preprocessed}" prefix="${lib.package}/src" includes="**/*.*"/>
 			<zipfileset dir="${path.output.device}" prefix="${lib.package}/dist" includes="**/*.jar"/>
 		    <zipfileset dir="${path.javadoc}" prefix="${lib.package}/doc/javadoc" includes="**/*.*"/>
+			<zipfileset dir="${basedir}" prefix="${lib.package}" includes="LICENSE.txt"/>
+			<zipfileset dir="${basedir}" prefix="${lib.package}" includes="READ-ME.txt"/>
+			<zipfileset dir="${basedir}" prefix="${lib.package}" includes="build.properties"/>
+			<zipfileset dir="${basedir}" prefix="${lib.package}" includes="build.xml"/>
 		</zip>
 	</target>
 	
