@@ -1,4 +1,4 @@
-/* TextListener.java
+/* CSVListener.java
  * 
  * Networking ME
  * Copyright (c) 2013 eMob Tech (http://www.emobtech.com/)
@@ -28,35 +28,25 @@ import com.emobtech.networkingme.util.Util;
 /**
  * <p>
  * This class represents a listener to request events, which provide a utility 
- * method to obtain the text content easily, result of a successful response.
+ * method to obtain the CSV content easily, result of a successful response.
  * </p>
  * @author Ernandes Jr. (ernandes@emobtech.com)
  * @version 1.0
- * @since 1.0
- * @see CSVListener
+ * @since 1.1
  */
-public abstract class TextListener implements RequestOperation.Listener {
+public abstract class CSVListener extends TextListener {
 	/**
 	 * <p>
 	 * Called when the request is concluded successfully.
 	 * </p>
-	 * @param text Response content as string.
+	 * @param csv Response content as CSV.
 	 */
-	public abstract void onText(String text);
+	public abstract void onCSV(String[][] csv);
 	
 	/**
-	 * @see com.emobtech.networkingme.RequestOperation.Listener#onSuccess(com.emobtech.networkingme.Request, com.emobtech.networkingme.Response)
+	 * @see com.emobtech.networkingme.TextListener#onText(java.lang.String)
 	 */
-	public final void onSuccess(Request request, Response response) {
-		try {
-			onText(Util.toString(response.getPayload().getBytes()));
-		} catch (Exception e) {
-			onFailure(request, new RequestException(e));
-		}
+	public final void onText(String text) {
+		onCSV(Util.parseCSV(text));
 	}
-	
-	/**
-	 * @see com.emobtech.networkingme.RequestOperation.Listener#onComplete(com.emobtech.networkingme.Request, com.emobtech.networkingme.Response)
-	 */
-	public final void onComplete(Request request, Response response) {}
 }
