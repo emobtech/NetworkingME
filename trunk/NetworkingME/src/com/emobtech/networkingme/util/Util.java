@@ -41,7 +41,7 @@ import java.util.Vector;
  * This class implements a series of utility methods.
  * </p>
  * @author Ernandes Jr. (ernandes@emobtech.com)
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public final class Util {
@@ -615,6 +615,81 @@ public final class Util {
 			return false;
 		} else {
 			return obj1.equals(obj2);
+		}
+	}
+	
+	/**
+	 * <p>
+	 * Parses a given multiline CSV-formated string to a String matrix.
+	 * </p>
+	 * @param csvString CSV string.
+	 * @return Matrix.
+	 */
+	public static String[][] parseCSV(String csvString) {
+		if (isEmptyString(csvString)) {
+			return new String[0][];
+		}
+		//
+		csvString = csvString.trim();
+		//
+		String[] lines = splitString(csvString, '\n');
+		String[][] csv = new String[lines.length][];
+		//
+		for (int i = 0; i < lines.length; i++) {
+			csv[i] = splitCSV(lines[i]);
+			//
+			for (int j = 0; j < csv[i].length; j++) {
+				csv[i][j] = formatValue(csv[i][j]);
+			}
+		}
+		//
+		return csv;
+	}
+	
+	/**
+	 * @param csvString
+	 * @return
+	 */
+	public static String[] splitCSV(String csvString) {
+		if (isEmptyString(csvString)) {
+			return new String[0];
+		}
+		//
+		if (csvString.indexOf('\"') == -1) { //no text values.
+			return splitString(csvString, ',');
+		} else {
+//			char[] csvChars = csvString.toCharArray();
+			//
+			//
+		}
+		//
+		return null;
+	}
+	
+	public static void main(String[] args) {
+		String csvString = "a,   b,\"casa\",d, e\nf,\"g\",h,i,j";
+		//
+		String[][] csv = parseCSV(csvString);
+		//
+		for (int i = 0; i < csv.length; i++) {
+			for (int j = 0; j < csv[i].length; j++) {
+				System.out.print(csv[i][j] + ", ");
+			}
+			//
+			System.out.println();
+		}
+	}
+	
+	/**
+	 * Formats a CSV value.
+	 * @param csvValue Value.
+	 * @return Formatted value.
+	 */
+	private static String formatValue(String csvValue) {
+		if (csvValue.startsWith("\"")) {
+			return csvValue.substring(1, csvValue.length() -1);
+		} else {
+			return csvValue;
 		}
 	}
 	
