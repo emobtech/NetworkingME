@@ -658,16 +658,39 @@ public final class Util {
 		if (csvString.indexOf('\"') == -1) { //no text values.
 			return splitString(csvString, ',');
 		} else {
-//			char[] csvChars = csvString.toCharArray();
+			String[] tokens = splitString(csvString, ',');
+			Vector t = new Vector(tokens.length);
+			StringBuffer token = new StringBuffer();
 			//
+			for (int i = 0; i < tokens.length; i++) {
+				if (tokens[i].startsWith("\"")) {
+					if (tokens[i].endsWith("\"")) {
+						t.addElement(tokens[i]);
+					} else {
+						token.append(tokens[i]);
+					}
+				} else if (tokens[i].endsWith("\"")) {
+					token.append(tokens[i]);
+					t.addElement(token.toString());
+					token.setLength(0);
+				} else {
+					if (token.length() == 0) {
+						t.addElement(tokens[i]);
+					} else {
+						token.append(tokens[i]);
+					}
+				}
+			}
 			//
+			tokens = new String[t.size()];
+			t.copyInto(tokens);
+			//
+			return tokens;
 		}
-		//
-		return null;
 	}
 	
 	public static void main(String[] args) {
-		String csvString = "a,   b,\"casa\",d, e\nf,\"g\",h,i,j";
+		String csvString = "a,   b,\"ca,sa\",d, e\nf,\"g\",h,i,j";
 		//
 		String[][] csv = parseCSV(csvString);
 		//
