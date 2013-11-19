@@ -1,5 +1,5 @@
 ********************************************************************************
-*                        NETWORKING ME 1.0.0 - READ ME                         *
+*                        NETWORKING ME 1.1.0 - READ ME                         *
 ********************************************************************************
 *                    https://java.net/projects/networkingme                    *
 ********************************************************************************
@@ -17,7 +17,12 @@ architecture with well-designed, feature-rich APIs that are easy to use.
 
  AVAILABLE IN THIS VERSION:
 ********************************************************************************
-- Initial release.
+- Listener class for CSV content format.
+- Listener class for XML content format based on SAX parser.
+- Listener class for JSON content format based on json.org parser.
+- Listener class for LWUIT Image content format.
+- URLLabel and URLButton components to display images from a URL for LWUIT.
+- Performance improvements.
 
  KNOWN BUGS IN THIS VERSION:
 ********************************************************************************
@@ -27,6 +32,6 @@ architecture with well-designed, feature-rich APIs that are easy to use.
 ********************************************************************************
 - N/A
   
- COMING NEXT VERSION: 1.1.0
+ COMING NEXT VERSION: 1.2.0
 ********************************************************************************
 - Let us know what you need.

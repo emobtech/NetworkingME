@@ -24,6 +24,16 @@
 		<mkdir dir="${path.output.device}"/>
 	</target>
 	
+	<target name="classpath">
+		<path id="networkingme.classpath">
+			<path path="${path.cldc10}"/>
+			<path path="${path.midp20}"/>
+			<path path="${path.lib.json}"/>
+			<path path="${path.lib.lwuit}"/>
+			<path path="${path.lib.jsr172}"/>
+		</path>
+	</target>
+	
 	<target name="javadoc">
 		  <javadoc sourcepath="${path.src}"
 		           destdir="${path.javadoc}"
@@ -32,7 +42,7 @@
 		           use="true"
 		           windowtitle="Networking ME v${lib.version}"
 		  		   locale="en_US"
-		  		   classpath="${wtk.midpapi}">
+		  		   classpathref="networkingme.classpath">
 		  	<doctitle><![CDATA[<h1>Networking ME v${lib.version}</h1>]]></doctitle>
 		  	<bottom><![CDATA[<i>Copyright &#169; 2013 eMob Tech. All Rights Reserved.</i>]]></bottom>
 		  </javadoc>
@@ -43,11 +53,11 @@
 	</target>
 	
 	<target name="compile" depends="preprocessor">
-		<wtkbuild srcdir="${path.build.preprocessed}" destdir="${path.build.classes}" sourcepath="" encoding="${src.encoding}" source="${src.version}" />
+		<wtkbuild srcdir="${path.build.preprocessed}" destdir="${path.build.classes}" sourcepath="" classpathref="networkingme.classpath" encoding="${src.encoding}" source="${src.version}"/>
 	</target>
 	
 	<target name="preverify">
-		<wtkpreverify jarfile="${path.output.device}/${lib.name}-v${lib.version}.jar"/>
+		<wtkpreverify jarfile="${path.output.device}/${lib.name}-v${lib.version}.jar" classpathref="networkingme.classpath"/>
 	</target>
 	
 	<target name="lib" depends="compile">
@@ -59,6 +69,7 @@
 
 		<zip destfile="${path.output.device}/${lib.package}.zip">
 			<zipfileset dir="${path.build.preprocessed}" prefix="${lib.package}/src" includes="**/*.*"/>
+			<zipfileset dir="${path.lib}" prefix="${lib.package}/lib" includes="**/*.jar"/>
 			<zipfileset dir="${path.output.device}" prefix="${lib.package}/dist" includes="**/*.jar"/>
 		    <zipfileset dir="${path.javadoc}" prefix="${lib.package}/doc/javadoc" includes="**/*.*"/>
 			<zipfileset dir="${basedir}" prefix="${lib.package}" includes="LICENSE.txt"/>
@@ -68,7 +79,7 @@
 		</zip>
 	</target>
 	
-	<target name="run" depends="lib, preverify, javadoc, package"/>
+	<target name="run" depends="classpath, lib, preverify, javadoc, package"/>
 	
 	<target name="build">
 		<antcall target="run">
