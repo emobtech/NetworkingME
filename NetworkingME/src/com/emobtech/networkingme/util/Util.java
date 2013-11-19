@@ -85,11 +85,11 @@ public final class Util {
         int iof;
         //
         while ((iof = str.indexOf(delimiter, start)) != -1) {
-            v.addElement(str.substring(start, iof).trim());
+            v.addElement(str.substring(start, iof));
             start = iof +1;
         }
         //
-        v.addElement(str.substring(start, str.length()).trim());
+        v.addElement(str.substring(start, str.length()));
         String[] codes = new String[v.size()];
         v.copyInto(codes);
         //
@@ -620,7 +620,18 @@ public final class Util {
 	
 	/**
 	 * <p>
-	 * Parses a given multiline CSV-formated string to a String matrix.
+	 * Returns if a given char is a space or tab.
+	 * </p> 
+	 * @param c Char.
+	 * @return is space char or not.
+	 */
+	public static final boolean isWhiteSpaceChar(char c) {
+		return c == ' ' || c == '\t';
+	}
+	
+	/**
+	 * <p>
+	 * Parses a given multi-line CSV-formated string to a String matrix.
 	 * </p>
 	 * @param csvString CSV string.
 	 * @return Matrix.
@@ -630,90 +641,107 @@ public final class Util {
 			return new String[0][];
 		}
 		//
-		csvString = csvString.trim();
+		char c = '0';
+		boolean valueStarted = false;
+		boolean stringValueStarted = false;
+		char[] csvArray = csvString.toCharArray();
 		//
-		String[] lines = splitString(csvString, '\n');
-		String[][] csv = new String[lines.length][];
+		Vector lines = new Vector();
+		Vector values = new Vector();
+		StringBuffer value = new StringBuffer();
 		//
-		for (int i = 0; i < lines.length; i++) {
-			csv[i] = splitCSV(lines[i]);
+		lines.addElement(values);
+		//
+		for (int i = 0; i < csvArray.length; i++) {
+			c = csvArray[i];
 			//
-			for (int j = 0; j < csv[i].length; j++) {
-				csv[i][j] = formatValue(csv[i][j]);
+			if (valueStarted) {
+				if (c == '\"') {
+					if (isPairOfDoubleQuote(csvArray, i)) {
+						value.append('\"');
+						//
+						i++;
+					} else {
+						stringValueStarted = false;
+					}
+				} else {
+					if (stringValueStarted || (c != ',' && c != '\n')) {
+						if (c != '\r') {
+							value.append(c);
+						}
+					} else {
+						values.addElement(value.toString());
+						//
+						valueStarted = false;
+						value.setLength(0);
+						//
+						if (c == '\n') {
+							values = new Vector();
+							lines.addElement(values);
+						}
+					}
+				}
+			} else {
+				if (c == ',') {
+					values.addElement("");
+				} else if (c == '\n') {
+					values = new Vector();
+					lines.addElement(values);
+				} else if (!isWhiteSpaceChar(c)) {
+					valueStarted = true;
+					//
+					if (c == '\"') {
+						if (isPairOfDoubleQuote(csvArray, i)) {
+							value.append('\"');
+							//
+							i++;
+						} else {
+							stringValueStarted = true;
+						}
+					} else {
+						if (c != '\r') {
+							value.append(c);
+						}
+					}
+				}
 			}
+		}
+		//
+		if (value.length() > 0) {
+			values.addElement(value.toString());
+		} else if (c == ',' || isWhiteSpaceChar(c)) {
+			values.addElement("");
+		}
+		//
+		if (values.size() == 0) {
+			lines.removeElementAt(lines.size() -1);
+		}
+		//
+		String[] line;
+		String[][] csv = new String[lines.size()][];
+		//
+		for (int i = 0; i < csv.length; i++) {
+			values = (Vector)lines.elementAt(i);
+			//
+			line = new String[values.size()];
+			values.copyInto(line);
+			//
+			csv[i] = line;
 		}
 		//
 		return csv;
 	}
 	
 	/**
-	 * @param csvString
-	 * @return
+	 * Returns if a given index represents a pair of double-quotes.
+	 * @param chars Chars.
+	 * @param index Index.
+	 * @return Pair (true).
 	 */
-	public static String[] splitCSV(String csvString) {
-		if (isEmptyString(csvString)) {
-			return new String[0];
-		}
-		//
-		if (csvString.indexOf('\"') == -1) { //no text values.
-			return splitString(csvString, ',');
-		} else {
-			String[] tokens = splitString(csvString, ',');
-			Vector t = new Vector(tokens.length);
-			StringBuffer token = new StringBuffer();
-			//
-			for (int i = 0; i < tokens.length; i++) {
-				if (tokens[i].startsWith("\"")) {
-					if (tokens[i].endsWith("\"")) {
-						t.addElement(tokens[i]);
-					} else {
-						token.append(tokens[i]);
-					}
-				} else if (tokens[i].endsWith("\"")) {
-					token.append(tokens[i]);
-					t.addElement(token.toString());
-					token.setLength(0);
-				} else {
-					if (token.length() == 0) {
-						t.addElement(tokens[i]);
-					} else {
-						token.append(tokens[i]);
-					}
-				}
-			}
-			//
-			tokens = new String[t.size()];
-			t.copyInto(tokens);
-			//
-			return tokens;
-		}
-	}
-	
-	public static void main(String[] args) {
-		String csvString = "a,   b,\"ca,sa\",d, e\nf,\"g\",h,i,j";
-		//
-		String[][] csv = parseCSV(csvString);
-		//
-		for (int i = 0; i < csv.length; i++) {
-			for (int j = 0; j < csv[i].length; j++) {
-				System.out.print(csv[i][j] + ", ");
-			}
-			//
-			System.out.println();
-		}
-	}
-	
-	/**
-	 * Formats a CSV value.
-	 * @param csvValue Value.
-	 * @return Formatted value.
-	 */
-	private static String formatValue(String csvValue) {
-		if (csvValue.startsWith("\"")) {
-			return csvValue.substring(1, csvValue.length() -1);
-		} else {
-			return csvValue;
-		}
+	private static boolean isPairOfDoubleQuote(char[] chars, int index) {
+		return chars[index] == '\"' 
+			&& index +1 < chars.length 
+			&& chars[index +1] == '\"';
 	}
 	
 	/**
