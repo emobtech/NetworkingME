@@ -38,7 +38,7 @@ import com.emobtech.networkingme.util.Util;
  * </a>
  * </p>
  * @author Ernandes Jr. (ernandes@emobtech.com)
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 public final class Cookie {
@@ -69,6 +69,25 @@ public final class Cookie {
 		if (Util.isEmptyString(getValue())) {
 			throw new IllegalArgumentException("Cookie's value missing!");
 		}
+	}
+	
+	/**
+	 * <p>
+	 * Creates a Cookie with given name and value.
+	 * </p>
+	 * @param name Name.
+	 * @param value Value.
+	 * @throws IllegalArgumentException Cookie name/value null or empty!
+	 */
+	public Cookie(String name, String value) {
+		if (Util.isEmptyString(name)) {
+			throw new IllegalArgumentException("Name null or empty!");
+		}
+		if (Util.isEmptyString(value)) {
+			throw new IllegalArgumentException("Value null or empty!");
+		}
+		//
+		cookie = name + "=" + value;
 	}
 	
 	/**
