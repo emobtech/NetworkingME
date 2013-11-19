@@ -23,8 +23,6 @@
  */
 package com.emobtech.networkingme;
 
-import com.emobtech.networkingme.http.HttpResponse;
-
 /**
  * <p>
  * This class represents a response from a request.
@@ -32,7 +30,6 @@ import com.emobtech.networkingme.http.HttpResponse;
  * @author Ernandes Jr. (ernandes@emobtech.com)
  * @version 1.0
  * @since 1.0
- * @see HttpResponse
  */
 public abstract class Response {
 	/**

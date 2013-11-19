@@ -23,8 +23,6 @@
  */
 package com.emobtech.networkingme;
 
-import com.emobtech.networkingme.lcdui.ImageListener;
-
 /**
  * <p>
  * This class represents a listener to request events, which provide a utility 
@@ -33,7 +31,6 @@ import com.emobtech.networkingme.lcdui.ImageListener;
  * @author Ernandes Jr. (ernandes@emobtech.com)
  * @version 1.0
  * @since 1.0
- * @see ImageListener
  */
 public abstract class BinaryListener implements RequestOperation.Listener {
 	/**

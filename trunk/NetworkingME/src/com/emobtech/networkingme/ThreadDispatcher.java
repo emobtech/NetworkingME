@@ -30,7 +30,7 @@ import java.util.Vector;
  * This class implements a thread pool used to run runnable objects.
  * </p>
  * @author Ernandes Jr. (ernandes@emobtech.com)
- * @version 1.0
+ * @version 1.1
  * @since 1.0
  */
 final class ThreadDispatcher implements Runnable {
@@ -49,11 +49,9 @@ final class ThreadDispatcher implements Runnable {
 	private Vector queue;
 	
 	/**
-	 * <p>
-	 * Thread.
-	 * </p>
+	 * Thread pool.
 	 */
-	private Thread thread;
+	private Vector threadPool;
 
 	/**
 	 * <p>
@@ -86,10 +84,10 @@ final class ThreadDispatcher implements Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	public void run() {
-		try {
-			Runnable process = null;
-			//
-			while (true) {
+		Runnable process = null;
+		//
+        while (true) {
+        	try {
                 synchronized (queue) {
                     if (queue.size() > 0) {
                     	process = (Runnable)queue.elementAt(0);
@@ -99,14 +97,17 @@ final class ThreadDispatcher implements Runnable {
                     }
                 }
                 //
-                if (process != null) {
-                    process.run();
-                    process = null;
+                if (process == null) {
+                    continue;
                 }
-            }
-        } catch (Throwable t) {
-        	t.printStackTrace();
-        }		
+                //
+                process.run();
+                //
+                process = null;
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+        }
 	}
 	
 	/**
@@ -116,7 +117,20 @@ final class ThreadDispatcher implements Runnable {
 	 */
 	private ThreadDispatcher() {
 		queue = new Vector(5);
-		thread = new Thread(this);
+		threadPool = new Vector(2);
+		//
+		addNewThreadToPool();
+		addNewThreadToPool();
+	}
+	
+	/**
+	 * Adds a new thread to the pool.
+	 */
+	private void addNewThreadToPool() {
+		Thread thread =
+			new Thread(this, "Thread Dispatcher #" + (threadPool.size() +1));
+		//
+		threadPool.addElement(thread);
 		//
 		thread.start();
 	}

@@ -33,7 +33,6 @@ import com.emobtech.networkingme.util.Util;
  * @author Ernandes Jr. (ernandes@emobtech.com)
  * @version 1.0
  * @since 1.0
- * @see CSVListener
  */
 public abstract class TextListener implements RequestOperation.Listener {
 	/**

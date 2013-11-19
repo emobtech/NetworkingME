@@ -25,8 +25,6 @@ package com.emobtech.networkingme;
 
 import java.io.IOException;
 
-import com.emobtech.networkingme.http.HttpRequest;
-
 /**
  * <p>
  * This class represents a request.
@@ -34,8 +32,6 @@ import com.emobtech.networkingme.http.HttpRequest;
  * @author Ernandes Jr. (ernandes@emobtech.com)
  * @version 1.0
  * @since 1.0
- * @see HttpRequest
- * @see RequestOperation
  */
 public abstract class Request {
 	/**
