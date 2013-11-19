@@ -23,9 +23,6 @@
  */
 package com.emobtech.networkingme;
 
-import com.emobtech.networkingme.http.MultipartBody;
-import com.emobtech.networkingme.http.WebFormBody;
-
 /**
  * <p>
  * This class represents a payload.
@@ -39,8 +36,6 @@ import com.emobtech.networkingme.http.WebFormBody;
  * @author Ernandes Jr. (ernandes@emobtech.com)
  * @version 1.0
  * @since 1.0
- * @see WebFormBody
- * @see MultipartBody
  */
 public interface Payload {
 	/**
