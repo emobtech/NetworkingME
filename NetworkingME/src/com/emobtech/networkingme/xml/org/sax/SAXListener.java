@@ -71,7 +71,7 @@ public abstract class SAXListener extends BinaryListener {
 	 * </p>
 	 * @param handler Response content as default handler.
 	 */
-	public abstract void onDefaultHandler(DefaultHandler handler);
+	public abstract void onSAX(DefaultHandler handler);
 
 	/**
 	 * @see com.emobtech.networkingme.BinaryListener#onBinary(byte[])
@@ -82,7 +82,7 @@ public abstract class SAXListener extends BinaryListener {
 			//
 			p.parse(new ByteArrayInputStream(data), handler);
 			//
-			onDefaultHandler(handler);
+			onSAX(handler);
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage());
 		}
