@@ -82,9 +82,9 @@ See below a list of all main components and what they are for:
 
 See below a list of some code snippets representing the most common usages:
 
-*'''Basic HTTP Request'''
+* **Basic HTTP Request**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com");
 HttpRequest req = new HttpRequest(url);
@@ -99,11 +99,11 @@ oper.start(new TextListener() {
 	}
 });
 ...
-</pre>
+```
 
-*'''Download an Image (LCDUI and LWUIT)''
+* **Download an Image (LCDUI and LWUIT)**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/images/logo.png");
 HttpRequest req = new HttpRequest(url);
@@ -116,11 +116,11 @@ oper.start(new ImageListener() {
 	...
 });
 ...
-</pre>
+```
 
-*'''Download a JSON Format Content''
+* **Download a JSON Format Content**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/json/file.json");
 HttpRequest req = new HttpRequest(url);
@@ -133,11 +133,11 @@ oper.start(new JSONListener() {
 	...
 });
 ...
-</pre>
+```
 
-*'''Download a XML Format Content''
+* **Download a XML Format Content**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/xml/file.xml");
 HttpRequest req = new HttpRequest(url);
@@ -150,11 +150,11 @@ oper.start(new SAXListener(new UserHandler()) {
 	...
 });
 ...
-</pre>
+```
 
-*'''Download a CSV Format Content''
+* **Download a CSV Format Content**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/csv/file.csv");
 HttpRequest req = new HttpRequest(url);
@@ -168,11 +168,11 @@ oper.start(new CSVListener() {
 	...
 });
 ...
-</pre>
+```
 
-*'''POST HTTP Request'''
+* **POST HTTP Request**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/post.php");
 HttpRequest req = new HttpRequest(url, HttpRequest.Method.POST);
@@ -186,11 +186,11 @@ req.setBody(body);
 RequestOperation oper = new RequestOperation(req);
 oper.start(...);
 ...
-</pre>
+```
 
-*'''POST Binary Data'''
+* **POST Binary Data**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/post_file.php");
 HttpRequest req = new HttpRequest(url, HttpRequest.Method.POST);
@@ -203,21 +203,21 @@ req.setBody(body);
 RequestOperation oper = new RequestOperation(req);
 oper.start(...);
 ...
-</pre>
+```
 
-*'''Header and Cookies'''
+* **Header and Cookies**
 
-<pre name="java">
+```java
 ...
 HttpRequest req = new HttpRequest(url);
 req.setHeader(HttpRequest.Header.USER_AGENT, "MyApp/1.0 (JavaME; MIDP2; CLDC1)");
 req.addCookie(new Cookie("name", "value"));
 ...
-</pre>
+```
 
-*'''Access REST services with HttpClient''
+* **Access REST services with HttpClient**
 
-<pre name="java">
+```java
 ...
 URL urlBase = new URL("http://www.emobtech.com/rest");
 HttpClient httpClient = new HttpClient(url);
@@ -229,11 +229,11 @@ httpClient.get("/friends.json", new TextListener() {
 	...
 });
 ...
-</pre>
+```
 
-*'''HttpClient to Post Data''
+* **HttpClient to Post Data**
 
-<pre name="java">
+```java
 ...
 URL urlBase = new URL("http://www.emobtech.com/rest");
 HttpClient httpClient = new HttpClient(url);
@@ -247,11 +247,11 @@ httpClient.postForm("/new_friend.json", params, new TextListener() {
 	...
 });
 ...
-</pre>
+```
 
-*'''HttpClient to Upload File''
+* **HttpClient to Upload File**
 
-<pre name="java">
+```java
 ...
 URL urlBase = new URL("http://www.emobtech.com/rest");
 HttpClient httpClient = new HttpClient(url);
@@ -268,22 +268,22 @@ httpClient.uploadFile(
 	...
 });
 ...
-</pre>
+```
 
-*'''Http Basic Access Authentication with HttpClient''
+* **Http Basic Access Authentication with HttpClient**
 
-<pre name="java">
+```java
 ...
 URL urlBase = new URL("http://www.emobtech.com/private/file.txt");
 HttpClient httpClient = new HttpClient(url);
 //
 httpClient.setBasicAuthentication("username", "password");
 ...
-</pre>
+```
 
-*'''Display an Image in a Form from an URL'''
+* **Display an Image in a Form from an URL**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/images/logo.png");
 URLImageItem imageItem = new URLImageItem("Image", url, Item.LAYOUT_CENTER, imagePlaceholder, "at text");
@@ -291,11 +291,11 @@ URLImageItem imageItem = new URLImageItem("Image", url, Item.LAYOUT_CENTER, imag
 Form form = new Form("URL Image");
 form.append(imageItem);
 ...
-</pre>
+```
 
-*'''Display an Image inside a Label in a LWUIT Form from an URL'''
+* **Display an Image inside a Label in a LWUIT Form from an URL**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/images/logo.png");
 URLLabel imageLabel = new URLLabel(url);
@@ -303,11 +303,11 @@ URLLabel imageLabel = new URLLabel(url);
 Form form = new Form("URL Image");
 form.addComponent(imageLabel);
 ...
-</pre>
+```
 
-*'''Display an Image inside a Button in a LWUIT Form from an URL'''
+* **Display an Image inside a Button in a LWUIT Form from an URL**
 
-<pre name="java">
+```java
 ...
 URL url = new URL("http://www.emobtech.com/images/logo.png");
 URLButton imageButton = new URLButton(url);
@@ -315,26 +315,26 @@ URLButton imageButton = new URLButton(url);
 Form form = new Form("URL Image");
 form.addComponent(imageButton);
 ...
-</pre>
+```
 
 # Credits
 
-This project was created by [http://linkedin.com/in/ernandes/ Ernandes Jr]. ([http://www.twitter.com/ernandesmjr @ernandesmjr]), founder at [http://www.emobtech.com eMob Tech] ([http://www.twitter.com/emobtech  @emobtech]).
+This project was created by [Ernandes Jr](http://linkedin.com/in/ernandes/). ([@ernandesmjr](http://www.twitter.com/ernandesmjr)), founder at [eMob Tech](http://www.emobtech.com) ([@emobtech](http://www.twitter.com/emobtech)).
 
 # References
 
-* [http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol Hypertext Transfer Protocol]
-* [https://en.wikipedia.org/wiki/HTTP_method#Request_methods HTTP Request Methods]
-* [https://en.wikipedia.org/wiki/List_of_HTTP_header_fields HTTP Header Fields]
-* [https://en.wikipedia.org/wiki/HTTP_response_codes HTTP Response Codes]
-* [http://en.wikipedia.org/wiki/Basic_access_authentication Basic Access Authentication]
-* [http://en.wikipedia.org/wiki/POST_(HTTP) HTTP POST]
-* [http://en.wikipedia.org/wiki/Multipart/form-data#Multipart_messages Multipart Messages]
-* [http://en.wikipedia.org/wiki/Payload_(computing) Payload]
-* [http://en.wikipedia.org/wiki/Uniform_resource_locator URL]
-* [https://en.wikipedia.org/wiki/HTTP_cookie Cookie]
-* [http://java.sun.com/javame/index.jsp Java Micro Edition]
+* [Hypertext Transfer Protocol](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)
+* [HTTP Request Methods](https://en.wikipedia.org/wiki/HTTP_method#Request_methods)
+* [HTTP Header Fields](https://en.wikipedia.org/wiki/List_of_HTTP_header_fields)
+* [HTTP Response Codes](https://en.wikipedia.org/wiki/HTTP_response_codes)
+* [Basic Access Authentication](http://en.wikipedia.org/wiki/Basic_access_authentication)
+* [HTTP POST](http://en.wikipedia.org/wiki/POST_(HTTP))
+* [Multipart Messages](http://en.wikipedia.org/wiki/Multipart/form-data#Multipart_messages)
+* [Payload](http://en.wikipedia.org/wiki/Payload_(computing))
+* [URL](http://en.wikipedia.org/wiki/Uniform_resource_locator)
+* [Cookie](https://en.wikipedia.org/wiki/HTTP_cookie)
+* [Java Micro Edition](http://java.sun.com/javame/index.jsp)
 
 # External Links
-* [http://www.emobtech.com eMob Tech]
-* [http://j2megroup.blogspot.com J2ME Group Blog]
+* [eMob Tech](http://www.emobtech.com)
+* [J2ME Group Blog](http://j2megroup.blogspot.com)
