@@ -1,21 +1,22 @@
 # NetworkingME
 Networking ME is a networking library for Java ME platform. It's built on top of Generic Connection Framework and other foundation technologies. It has a modular architecture with well-designed, feature-rich APIs that are easy to use.
-# How to Get Started
+
+## How to Get Started
 
 * Download [latest version](https://java.net/projects/networkingme/downloads/directory/Library) package.
 * Add the library jar file (networkingme-vX.jar) to your project's libraries.
 * Read this Wiki page, Javadoc, study the example usages below and [samples](https://java.net/projects/networkingme/downloads/directory/Samples).
 * Any doubt, post a message in the [Forum](https://java.net/projects/networkingme/forums).
 
-# Requirements
+## Requirements
 
 * MIDP 2.0 / CLDC 1.0
 
-# License
+## License
 
 Networking ME is available under the [**MIT**](http://opensource.org/licenses/MIT) license.
 
-# Update History
+## Update History
 
 See below a list of all updates and what they consist of:
 
@@ -24,7 +25,7 @@ Version | Date | Contents
 1.1 | 11/19/2013 | 1. Listener classes for CSV, XML JSON and LWUIT Image content formats.<br/> 2. URLLabel and URLButton LWUIT components.
 1.0 | 07/12/2013 | Initial release
 
-# Components Overview
+## Components Overview
 
 See below a list of all main components and what they are for:
 
@@ -46,7 +47,7 @@ URLImageItem | This is a custom item class that loads an image from an URL and d
 URLLabel | This is a LWUIT custom Label class that loads an image from an URL and displays it in a LWUIT Form.
 URLButton | This is a LWUIT custom Button class that loads an image from an URL and displays it in a LWUIT Form.
 
-# Example Usage
+## Example Usage
 
 See below a list of some code snippets representing the most common usages:
 
@@ -285,11 +286,11 @@ form.addComponent(imageButton);
 ...
 ```
 
-# Credits
+## Credits
 
 This project was created by [Ernandes Jr](http://linkedin.com/in/ernandes/). ([@ernandesmjr](http://www.twitter.com/ernandesmjr)), founder at [eMob Tech](http://www.emobtech.com) ([@emobtech](http://www.twitter.com/emobtech)).
 
-# References
+## References
 
 * [Hypertext Transfer Protocol](http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol)
 * [HTTP Request Methods](https://en.wikipedia.org/wiki/HTTP_method#Request_methods)
@@ -303,6 +304,6 @@ This project was created by [Ernandes Jr](http://linkedin.com/in/ernandes/). ([@
 * [Cookie](https://en.wikipedia.org/wiki/HTTP_cookie)
 * [Java Micro Edition](http://java.sun.com/javame/index.jsp)
 
-# External Links
+## External Links
 * [eMob Tech](http://www.emobtech.com)
 * [J2ME Group Blog](http://j2megroup.blogspot.com)
