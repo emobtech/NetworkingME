@@ -28,55 +28,23 @@ Version | Date | Contents
 
 See below a list of all main components and what they are for:
 
-{|- border="1"
-!<center>Component</center>
-!Description
-|-
-|<center>HttpRequest</center>
-|This is the class used to create HTTP request.
-|-
-|<center>HttpResponse</center>
-|This is the class that represents a response from a HTTP request.
-|-
-|<center>RequestOperation</center>
-|This is the class responsible for running a request asynchronously and delivery the response.
-|-
-|<center>RequestOperation.Listener</center>
-|This is the interface that represents a listener to events that are triggered during a request execution.
-|-
-|<center>TextListener</center>
-|This is the listener class to request events that has a utility method to easy delivery the request's result as string.
-|-
-|<center>BinaryListener</center>
-|This is the listener class to request events that has a utility method to easy delivery the request's result as bytes.
-|-
-|<center>ImageListener</center>
-|This is the listener class to request events that has a utility method to easy delivery the request's result as a LCDUI image.
-|-
-|<center>CSVListener</center>
-|This is the listener class to request events that has a utility method to easy delivery the request's result as CSV.
-|-
-|<center>SAXListener</center>
-|This is the listener class to request events that has a utility method to easy delivery the request's result as SAX XML handler.
-|-
-|<center>JSONListener</center>
-|This is the listener class to request events that has a utility method to easy delivery the request's result as JSON object.
-|-
-|<center>ImageListener (LWUIT)</center>
-|This is the listener class to request events that has a utility method to easy delivery the request's result as a LWUIT image.
-|-
-|<center>HttpClient</center>
-|This is the class that implements the common patterns of communicating with an web application over HTTP.
-|-
-|<center>URLImageItem</center>
-|This is a custom item class that loads an image from an URL and displays it in a LCDUI Form.
-|-
-|<center>URLLabel</center>
-|This is a LWUIT custom Label class that loads an image from an URL and displays it in a LWUIT Form.
-|-
-|<center>URLButton</center>
-|This is a LWUIT custom Button class that loads an image from an URL and displays it in a LWUIT Form.
-|}
+Component | Description
+--------- | -----------
+HttpRequest | This is the class used to create HTTP request.
+HttpResponse | This is the class that represents a response from a HTTP request.
+RequestOperation | This is the class responsible for running a request asynchronously and delivery the response.
+RequestOperation.Listener | This is the interface that represents a listener to events that are triggered during a request execution.
+TextListener | This is the listener class to request events that has a utility method to easy delivery the request's result as string.
+BinaryListener | This is the listener class to request events that has a utility method to easy delivery the request's result as bytes.
+ImageListener | This is the listener class to request events that has a utility method to easy delivery the request's result as a LCDUI image.
+CSVListener | This is the listener class to request events that has a utility method to easy delivery the request's result as CSV.
+SAXListener | This is the listener class to request events that has a utility method to easy delivery the request's result as SAX XML handler.
+JSONListener | This is the listener class to request events that has a utility method to easy delivery the request's result as JSON object.
+ImageListener (LWUIT) | This is the listener class to request events that has a utility method to easy delivery the request's result as a LWUIT image.
+HttpClient | This is the class that implements the common patterns of communicating with an web application over HTTP.
+URLImageItem | This is a custom item class that loads an image from an URL and displays it in a LCDUI Form.
+URLLabel | This is a LWUIT custom Label class that loads an image from an URL and displays it in a LWUIT Form.
+URLButton | This is a LWUIT custom Button class that loads an image from an URL and displays it in a LWUIT Form.
 
 # Example Usage
 
