@@ -13,7 +13,7 @@ Networking ME is a networking library for Java ME platform. It's built on top of
 
 # License
 
-Networking ME is available under the [http://opensource.org/licenses/MIT '''MIT'''] license.
+Networking ME is available under the [**MIT**](http://opensource.org/licenses/MIT) license.
 
 # Update History
 
