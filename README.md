@@ -2,14 +2,14 @@
 Networking ME is a networking library for Java ME platform. It's built on top of Generic Connection Framework and other foundation technologies. It has a modular architecture with well-designed, feature-rich APIs that are easy to use.
 # How to Get Started
 
-*Download [https://java.net/projects/networkingme/downloads/directory/Library latest version] package.
-*Add the library jar file (networkingme-vX.jar) to your project's libraries.
-*Read this Wiki page, Javadoc, study the example usages below and [https://java.net/projects/networkingme/downloads/directory/Samples samples].
-*Any doubt, post a message in the [https://java.net/projects/networkingme/forums Forum].
+* Download [https://java.net/projects/networkingme/downloads/directory/Library latest version] package.
+* Add the library jar file (networkingme-vX.jar) to your project's libraries.
+* Read this Wiki page, Javadoc, study the example usages below and [https://java.net/projects/networkingme/downloads/directory/Samples samples].
+* Any doubt, post a message in the [https://java.net/projects/networkingme/forums Forum].
 
 # Requirements
 
-*MIDP 2.0 / CLDC 1.0
+* MIDP 2.0 / CLDC 1.0
 
 # License
 
@@ -344,6 +344,6 @@ This project was created by [http://linkedin.com/in/ernandes/ Ernandes Jr]. ([ht
 * [https://en.wikipedia.org/wiki/HTTP_cookie Cookie]
 * [http://java.sun.com/javame/index.jsp Java Micro Edition]
 
-= External Links =
+# External Links
 * [http://www.emobtech.com eMob Tech]
 * [http://j2megroup.blogspot.com J2ME Group Blog]
