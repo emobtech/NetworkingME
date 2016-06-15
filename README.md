@@ -23,7 +23,7 @@ See below a list of all updates and what they consist of:
 Version | Date | Contents
 ------- | ---- | --------
 1.1 | 11/19/2013 | 1. Listener classes for CSV, XML JSON and LWUIT Image content formats.<br/> 2. URLLabel and URLButton LWUIT components.
-1.0 | 07/12/2013 | Initial release
+1.0 | 07/12/2013 | 1. Initial release.
 
 ## Components Overview
 
